@@ -10,15 +10,15 @@ public class Transaction implements Serializable {
     private TransactionType type;
     private String category;
     private double value;
-    private Date data;
+    private Date date;
     private String description ;
 
-    public Transaction(int id, TransactionType type, String category, double value, Date data, String description) {
+    public Transaction(int id, TransactionType type, String category, double value, Date date, String description) {
         this.id = id;
         this.type = type;
         this.category = category;
         this.value = value;
-        this.data = data;
+        this.date = date;
         this.description = description;
     }
 
@@ -54,12 +54,12 @@ public class Transaction implements Serializable {
         this.value = value;
     }
 
-    public Date getData() {
-        return data;
+    public Date getDate() {
+        return date;
     }
 
-    public void setData(Date data) {
-        this.data = data;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getDescription() {
@@ -69,4 +69,6 @@ public class Transaction implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }

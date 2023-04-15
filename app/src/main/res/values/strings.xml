@@ -10,5 +10,6 @@
         <item>"Clothes"</item>
         <item>"Pets"</item>
         <item>"Yard"</item>
+        <item>"Other"</item>
     </string-array>
 </resources>

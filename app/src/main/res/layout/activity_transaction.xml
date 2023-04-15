@@ -14,7 +14,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="50dp"
         android:background="@drawable/pink_out_line"
-        android:checkedButton="@+id/transactionRevenueType"
+        android:checkedButton="@+id/transactionExpenseType"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +86,7 @@
             android:hint="@string/value"
             android:numeric="signed|integer|decimal"
             android:phoneNumber="false"
-            android:text="0"
+            android:text="100"
             tools:ignore="Deprecated" />
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -4,6 +4,6 @@ public enum TransactionType {
 
     EXPENSE,
     INCOME,
-    ACCOUNT_TRANSFER
+   TRANSFER
 
 }

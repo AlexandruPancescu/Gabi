@@ -9,5 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="text_font_color">#0081C9</color>
     <color name="switch_light_grey">#D3D3D3</color>
+    <color name="piechart_green_1">#068A3B</color>
+
 
 </resources>
