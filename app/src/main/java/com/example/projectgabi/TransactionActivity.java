@@ -75,10 +75,10 @@ public class TransactionActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.d("params", "merge");
-                        Toast.makeText(getApplicationContext(), "Se incarca datele..", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(getApplicationContext(), "Se incarca datele..", Toast.LENGTH_SHORT).show();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                           // Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -88,7 +88,7 @@ public class TransactionActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                  Log.d("params", error.getMessage());
+                  Log.d("my tag error", error.getMessage());
                   //show the error
                     Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
 
