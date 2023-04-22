@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             pieData = savedInstance.getParcelable("pieData");
         } else {
             //  Log.d("My tag", pieChart.getData().toString());
-            initPieChart();
+          //  initPieChart();
         }
 
 

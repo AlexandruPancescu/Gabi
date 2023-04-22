@@ -48,7 +48,7 @@
             android:background="@drawable/toggle_widget_background"
             android:button="@null"
             android:gravity="center"
-            android:text="@string/revenue"
+            android:text="@string/Income"
             android:textColor="@color/white" />
     </RadioGroup>
 

@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">ProjectGabi</string>
-    <string name="expense">expense</string>
+    <string name="expense">Expense</string>
     <string name="revenue">revenue</string>
     <string name="value">value</string>
     <string name="description">Description</string>
     <string name="welcome_message">Welcome, %s!</string>
+    <string name="Income" />
     <string-array name="spinner_category_list">
         <item>"Bills"</item>
         <item>"Clothes"</item>
