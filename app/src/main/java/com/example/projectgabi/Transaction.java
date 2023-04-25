@@ -6,14 +6,14 @@ import java.util.Date;
 
 public class Transaction implements Serializable {
 
-    private int id;
+    private String id;
     private TransactionType type;
     private String category;
     private double value;
     private Date date;
     private String description ;
 
-    public Transaction(int id, TransactionType type, String category, double value, Date date, String description) {
+    public Transaction(String id, TransactionType type, String category, double value, Date date, String description) {
         this.id = id;
         this.type = type;
         this.category = category;
@@ -22,11 +22,11 @@ public class Transaction implements Serializable {
         this.description = description;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -70,5 +70,9 @@ public class Transaction implements Serializable {
         this.description = description;
     }
 
-
+ // make a toString method using String format
+    @Override
+    public String toString() {
+        return String.format("Transaction{id=%s, type=%s, category=%s, value=%f, date=%s, description=%s}", id, type, category, value, date, description);
+    }
 }
