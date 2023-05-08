@@ -1,38 +1,24 @@
 package com.example.projectgabi;
 
-import static java.lang.System.out;
-
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.projectgabi.Utils.Constants;
 import com.example.projectgabi.Utils.DateConverter;
-import com.example.projectgabi.Utils.TransactionAdapter;
+import com.example.projectgabi.Utils.RequestHandler;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -44,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
     Button addTransactionBtn, accountActivityBtn;
     PieChart pieChart;
     PieData pieData;
-    ArrayList<Transaction> transactionList;
+   // List transactionList;
+    Map<String, List<Transaction>> transactionMap;
+    ArrayList<PieEntry> categories;
 
 
     @Override
@@ -72,28 +61,13 @@ public class MainActivity extends AppCompatActivity {
         initComponents();
         initPieChart();
 
-//        if (savedInstance != null) {
-//            pieData = savedInstance.getParcelable("pieData");
-//        } else {
-//            initPieChart();
-//        }
 
         if (intent.hasExtra(LoginPage.USERNAME_KEY)) {
             //tvWelcome.setText("Welcome, " + intent.getStringExtra(LoginPage.USERNAME_KEY));
             String welcomeMessaage = String.format(getResources().getString(R.string.welcome_message), intent.getStringExtra(LoginPage.USERNAME_KEY));
             tvWelcome.setText(welcomeMessaage);
         }
-        // put the transaction  date atribute in the text view
-        if (intent.hasExtra(TransactionActivity.TRANSACTION_KEY)) {
-            Transaction transaction = (Transaction) intent.getSerializableExtra(TransactionActivity.TRANSACTION_KEY);
-            transactionList.add(transaction);
-        }
 
-        // set the tv test to the value of the spinner
-        TransactionAdapter transactionAdapter = new TransactionAdapter(getApplicationContext(),
-                R.layout.activity_main,
-                transactionList,
-                getLayoutInflater());
 
         addTransactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,35 +98,7 @@ public class MainActivity extends AppCompatActivity {
             PieData pieData = pieChart.getData();
             PieDataSet dataSet = (PieDataSet) pieData.getDataSetByIndex(0);
             List<PieEntry> entries = dataSet.getValues();
-//            for (PieEntry entry : dataSet.getValues()) {
-//                if (entry.getLabel().equals(transaction.getCategory())) {
-//                    Log.d("test entry", dataSet.getValues().toString());
-//                    Log.d("test entry", entry.toString());
-//                    float value = entry.getY()+ (float) transaction.getValue();
-//                    entry.setY(value);
-//                   entries.get ( entries.indexOf(entry)).setY(value);
-//
-//                   // PieEntry updatedEntry = new PieEntry(value, transaction.getCategory());
-//                   // entries.add(updatedEntry);
-//
-//                    dataSet.setValues(entries);
-//
-//                    pieData.setDataSet(dataSet);
-//                    pieChart.setData(pieData);
-//                    pieData.notifyDataChanged();
-//                    pieChart.notifyDataSetChanged();
-//                    pieChart.invalidate();
-//                    break;
-//                }
-//
-//            }
 
-            //  Log.d("Pie test", dataSet.toString());
-
-//            PieEntry entry = dataSet.getEntryForLabel(transaction.getCategory(), 0);
-//            entry.setY(entry.getY() + transaction.getAmount());
-//            data.notifyDataChanged();
-//            pieChart.notifyDataSetChanged();
             List<PieEntry> updatedEntries = new ArrayList<>();
             for (PieEntry entry : entries) {
                 if (entry.getLabel().equals(transaction.getCategory())) {
@@ -176,8 +122,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initPieChart() {
 
-
-
         JsonObjectRequest request = new JsonObjectRequest(Constants.READ_TRANSACTION_URL, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -186,12 +130,13 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Adding data", Toast.LENGTH_SHORT).show();
                     getTransactionFromJson(response);
 
-                    Log.d("Main piechart", "init pie chart");
+                  //  Log.d("Main piechart", "init pie chart");
                     // initialize the pie chart
-                    ArrayList<PieEntry> categories = addChartValues(); // get the values from the transaction
+                    categories = new ArrayList<>();
+                    addChartValues(categories); // get the values from the transaction
 
 
-                    Log.d("Main transaction size", String.valueOf(categories.size()));
+                 //   Log.d("Main transaction size", String.valueOf(categories.size()));
                     Resources res = getResources();
                     PieDataSet pieDataSet = new PieDataSet(categories, "Categories");
                     pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
@@ -223,11 +168,11 @@ public class MainActivity extends AppCompatActivity {
         RequestHandler.getInstance(this).addToRequestQueue(request);
 
 
-
     }
 
     public void initComponents() {
-        transactionList = new ArrayList<>();
+        //transactionList = new ArrayList<>();
+        transactionMap = new HashMap<>();
         pieChart = findViewById(R.id.mainPieChart);
         tvTest = findViewById(R.id.testRecycleView);
         tvWelcome = findViewById(R.id.mainWelcomeText);
@@ -238,32 +183,31 @@ public class MainActivity extends AppCompatActivity {
 
     public void getTransactionFromJson(JSONObject response) {
         try {
-            JSONArray jsonArray = response.getJSONArray("transactions"); // hardcoded!!
-            //  Log.d("Main JSON", jsonArray.getJSONObject(0).getInt("id") + "");
+            JSONArray jsonArray = response.getJSONArray(Constants.KEY_TRANSACTIONS_ARRAY_KEY);
 
             // should make it into a method
             for (int i = 0; i < jsonArray.length(); i++) {
 
-                // !! hardcoded values
-
-                Log.d("Main Transaction", "...for loop...");
                 JSONObject jsonTransaction = jsonArray.getJSONObject(i);
-
 
                 TransactionType type = TransactionType.valueOf(jsonTransaction.getString(Constants.KEY_TRANSACTION_TYPE));
                 String category = jsonTransaction.getString(Constants.KEY_TRANSACTION_CATEGORY);
                 double value = jsonTransaction.getDouble(Constants.KEY_TRANSACTION_VALUE);
                 Date date = DateConverter.fromString(jsonTransaction.getString(Constants.KEY_TRANSACTION_DATE));
                 String description = jsonTransaction.getString(Constants.KEY_TRANSACTION_DESCRIPTION);
+
                 // generate an UUID for transaction
                 UUID uuid = UUID.randomUUID();
                 Transaction transaction = new Transaction(String.valueOf(uuid), type, category, value, date, description);
 
-                transactionList.add(transaction);
-               //  Log.d("Main Transaction", "Transaction " + String.valueOf(transaction.getId()) + " added to the list ");
-                // tvTest.setText(String.valueOf(transaction.getId()));
-                //put in a log d all the transcactions
-                //  transactionList.forEach(transaction1 -> Log.d("transaction", transaction1.toString()));
+                //in the transaction map, add the transaction to the list of transactions, based on the cateogry
+                if (transactionMap.containsKey(transaction.getCategory())) {
+                    transactionMap.get(transaction.getCategory()).add(transaction);
+                } else {
+                    transactionMap.put(transaction.getCategory(), new ArrayList<>(Arrays.asList(transaction)));
+                }
+
+                transactionMap.forEach((s, transaction1) -> Log.d("transaction " + s, transaction1.toString()));
 
             }
         } catch (JSONException e) {
@@ -271,37 +215,57 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<PieEntry> addChartValues() {
-        ArrayList<PieEntry> categories = new ArrayList<>();
+    private void addChartValues(ArrayList<PieEntry> categories) {
+
         Log.d("Main transactions", "adding chart values");
 
-        for (Transaction transaction : transactionList) {
-            boolean found = false;
-            for (PieEntry pieEntry : categories) {
-                if (pieEntry.getLabel().equals(transaction.getCategory())) {
-                    pieEntry.setY(pieEntry.getY() + (float) transaction.getValue());
-                    found = true;
-                    break;
-
-                }
-                // if the category is not in the list, add it
-//                PieEntry newPieEntry = new PieEntry((float) transaction.getValue(), transaction.getCategory());
-//                categories.add(pieEntry);
-            }
-            if(!found){
-                PieEntry newPieEntry = new PieEntry((float) transaction.getValue(), transaction.getCategory());
-                categories.add(newPieEntry);
-            }
-//            PieEntry pieEntry = new PieEntry((float) transaction.getValue(), transaction.getCategory());
-//            categories.add(pieEntry);
-
-
+        if (transactionMap.isEmpty() || transactionMap == null) {
+            // or throw a new  exception
+            Toast.makeText(getApplicationContext(), "No transactions, you can add how many you want!", Toast.LENGTH_SHORT).show();
+            // end the method
+            return;
         }
 
+        if (categories == null) {
+            categories = new ArrayList<>();
+        }
+
+        // add the value of each object, based on the key set, then  make a new Pientry object and add it to the list
+
+        for (String category : transactionMap.keySet()) {
+            double value = 0;
+            for (Transaction transaction : transactionMap.get(category)) {
+                value += transaction.getValue();
+            }
+            categories.add(new PieEntry((float) value, category));
+        }
+
+        // Pie chart data set
+        PieDataSet pieDataSet = new PieDataSet(categories, "Transactions by category");
+
         categories.forEach(pieEntry1 -> Log.d("Main pieEntry", pieEntry1.toString()));
-        return categories;
+
     }
 
 
 }
 
+//        for (Transaction transaction : transactionMap) {
+//            boolean found = false;
+//            // if the transaction category is found in the categories list, add the value to the existing value
+//            for (PieEntry pieEntry : categories) {
+//                if (pieEntry.getLabel().equals(transaction.getCategory())) {
+//                    // the value is doubled because the value is added twice
+//                    // fix
+//                    pieEntry.setY(pieEntry.getY() + (float) transaction.getValue());
+//                    found = true;
+//                    Log.d("Main pieEntry value ", pieEntry.toString());
+//                    break;
+//                }
+//            }
+//
+//            if (!found) {
+//                PieEntry newPieEntry = new PieEntry((float) transaction.getValue(), transaction.getCategory());
+//                categories.add(newPieEntry);
+//            }
+//        }

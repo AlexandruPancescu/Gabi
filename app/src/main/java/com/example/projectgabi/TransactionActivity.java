@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.projectgabi.Utils.Constants;
 import com.example.projectgabi.Utils.DateConverter;
+import com.example.projectgabi.Utils.RequestHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -103,6 +104,7 @@ public class TransactionActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
+                Log.d("transaction", "Transaction " + transaction.getCategory() + " sent with value: " + transaction.getValue() );
                 params.put("value", String.valueOf(transaction.getValue()).trim());
                 params.put("type", String.valueOf(transaction.getType()).trim());
                 params.put("category", transaction.getCategory());
@@ -140,6 +142,7 @@ public class TransactionActivity extends AppCompatActivity {
         TransactionType type = transactionFromString(checkedVariant);
         String category = categorySpn.getSelectedItem().toString();
         double value = Double.parseDouble(amountEt.getText().toString());
+
         String description = descriptionEt.getText().toString();
         DateConverter dateConverter = new DateConverter();
         Date date = dateConverter.fromString(dateEt.getText().toString());
