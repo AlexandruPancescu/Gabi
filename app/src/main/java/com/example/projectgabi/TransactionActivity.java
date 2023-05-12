@@ -72,7 +72,7 @@ public class TransactionActivity extends AppCompatActivity {
             Log.d("transaction url", "url is null");
             return;
         }
-        // in this method the created thasaction is sent to the databse server
+        // in this method the created transaction is sent to the database server
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.CREATE_TRANSACTION_URL,

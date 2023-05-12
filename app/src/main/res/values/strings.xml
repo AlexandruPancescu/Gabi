@@ -6,6 +6,15 @@
     <string name="description">Description</string>
     <string name="welcome_message">Welcome, %s!</string>
     <string name="Income" />
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="passwordTestScope">password</string>
+    <string name="register">Register</string>
+    <string name="cancel">Cancel</string>
     <string-array name="spinner_category_list">
         <item>"Bills"</item>
         <item>"Clothes"</item>

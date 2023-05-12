@@ -8,10 +8,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.textfield.TextInputEditText;
-
 public class LoginPage extends AppCompatActivity {
-    Button skipBtn;
+    Button loginBtn, newUserBtn;
   EditText usernameEt ;
 
     public static final String USERNAME_KEY = "username";
@@ -23,11 +21,12 @@ public class LoginPage extends AppCompatActivity {
         setContentView(R.layout.activity_login_page);
 
 
-        skipBtn = findViewById(R.id.loginButton);
+        loginBtn = findViewById(R.id.loginButton);
         usernameEt = findViewById(R.id.emailTextInput);
+        newUserBtn = findViewById(R.id.loginNewUserBtn);
 
 
-        skipBtn.setOnClickListener(new View.OnClickListener() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -37,6 +36,19 @@ public class LoginPage extends AppCompatActivity {
                 finish();
             }
         });
+
+
+        newUserBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AccountActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
+
+
+
 
 }

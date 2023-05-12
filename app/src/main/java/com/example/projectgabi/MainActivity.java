@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
    // List transactionList;
     Map<String, List<Transaction>> transactionMap;
     ArrayList<PieEntry> categories;
+    User user ;
 
 
     @Override
@@ -68,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
             tvWelcome.setText(welcomeMessaage);
         }
 
+        if (intent.hasExtra(AccountActivity.NEW_USER_KEY)) {
+            user = (User) intent.getSerializableExtra(AccountActivity.NEW_USER_KEY);
+            tvWelcome.setText("Welcome, " + user.getFirstName());
+            Log.d("user", user.toString());
+        }
+
 
         addTransactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
 
     // update the pie chart based on the transaction [OLD]
 
@@ -136,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     addChartValues(categories); // get the values from the transaction
 
 
-                 //   Log.d("Main transaction size", String.valueOf(categories.size()));
+
                     Resources res = getResources();
                     PieDataSet pieDataSet = new PieDataSet(categories, "Categories");
                     pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
@@ -172,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void initComponents() {
         //transactionList = new ArrayList<>();
+        user = new User();
         transactionMap = new HashMap<>();
         pieChart = findViewById(R.id.mainPieChart);
         tvTest = findViewById(R.id.testRecycleView);
