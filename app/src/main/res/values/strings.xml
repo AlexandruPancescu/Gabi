@@ -1,6 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ProjectGabi</string>
     <string name="expense">Expense</string>
+    <string name="transaction">Transaction</string>
     <string name="revenue">revenue</string>
     <string name="value">value</string>
     <string name="description">Description</string>
@@ -15,11 +16,26 @@
     <string name="passwordTestScope">password</string>
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
+
+
+    <string-array name="meta_categories">
+        <item>"Frequent"</item>
+        <item>"Non-frequent"</item>
+        <item>"Life"</item>
+        <item>"Other"</item>
+    </string-array>
+
     <string-array name="spinner_category_list">
         <item>"Bills"</item>
         <item>"Clothes"</item>
         <item>"Pets"</item>
         <item>"Yard"</item>
         <item>"Other"</item>
+
     </string-array>
+
+
+
+
+
 </resources>

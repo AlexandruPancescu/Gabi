@@ -48,6 +48,15 @@ public class TransactionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transaction);
         initComponents();
         intent = getIntent();
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +120,7 @@ public class TransactionActivity extends AppCompatActivity {
                 params.put("date", DateConverter.fromDate(transaction.getDate()));
                 params.put("description", transaction.getDescription().trim());
                 params.put("id", transaction.getId().toString().trim());
+                params.put("parentCategory", transaction.getParentCategory().trim());
                // Log.d("params", params.toString().trim());
 
                 return params;
@@ -147,7 +157,25 @@ public class TransactionActivity extends AppCompatActivity {
         DateConverter dateConverter = new DateConverter();
         Date date = dateConverter.fromString(dateEt.getText().toString());
         UUID uuid = UUID.randomUUID();
-        return new Transaction(String.valueOf(uuid), type, category, value, date, description);
+        String parentCategory = putParentCategory(category);
+
+        return new Transaction(String.valueOf(uuid), type, category, value, date, description, parentCategory);
+    }
+
+    private String putParentCategory(String category) {
+        // make switch case for each category
+        switch (category) {
+            case "Bills":
+                return "Frequent";
+            case "Pets":
+            case "Yard":
+            case "Food":
+                return "Non-Frequent";
+            case "Clothes":
+                return "Life";
+            default:
+                return "Other";
+        }
     }
 
 

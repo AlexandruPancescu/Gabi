@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android" tools:ignore="StateListReachable">
+    <!-- When selected, use grey -->
+    <item android:drawable="@color/switch_light_grey" android:state_selected="true"/>
+    <!-- When not selected, use white-->
+
+
+<!--    add a margin -->
+    <item>
+
+        <shape android:shape="rectangle">
+            <solid android:color="@color/switch_light_grey"/>
+            <corners android:radius="30dp"/>
+
+<!--            add color to the padding-->
+            <padding
+                android:color="@color/black"
+                android:bottom="10dp"
+                android:left="10dp"
+                android:right="10dp"
+                android:top="10dp"
+
+
+                />
+
+
+        </shape>
+    </item>
+
+</selector>

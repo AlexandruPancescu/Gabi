@@ -95,4 +95,13 @@
         app:layout_constraintTop_toBottomOf="@+id/loginPasswordInput"
         app:layout_constraintVertical_bias="0.911" />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="104dp"
+        tools:layout_editor_absoluteY="570dp"
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

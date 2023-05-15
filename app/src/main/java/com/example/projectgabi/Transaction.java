@@ -12,14 +12,18 @@ public class Transaction implements Serializable {
     private double value;
     private Date date;
     private String description ;
+    private String parentCategory;
 
-    public Transaction(String id, TransactionType type, String category, double value, Date date, String description) {
+
+
+    public Transaction(String id, TransactionType type, String category, double value, Date date, String description, String parentCategory) {
         this.id = id;
         this.type = type;
         this.category = category;
         this.value = value;
         this.date = date;
         this.description = description;
+        this.parentCategory = parentCategory;
     }
 
     public String getId() {
@@ -70,9 +74,26 @@ public class Transaction implements Serializable {
         this.description = description;
     }
 
- // make a toString method using String format
+    public String getParentCategory() {
+        return parentCategory;
+    }
+
+    public void setParentCategory(String parentCategory) {
+        this.parentCategory = parentCategory;
+    }
+
+    // make a toString method using String format
+
     @Override
     public String toString() {
-        return String.format("Transaction{id=%s, type=%s, category=%s, value=%f, date=%s, description=%s}", id, type, category, value, date, description);
+        return "Transaction{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                ", category='" + category + '\'' +
+                ", value=" + value +
+                ", date=" + date +
+                ", description='" + description + '\'' +
+                ", parentCategory='" + parentCategory + '\'' +
+                '}';
     }
 }
