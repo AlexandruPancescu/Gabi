@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         // transactionMap.put("Food", Arrays.asList(new Transaction("1", TransactionType.EXPENSE, "Food", 110, DateConverter.fromString("01-01-2020"), "Food", "Non-Frequent")));
         // transactionMap.put("Bills", Arrays.asList(new Transaction("2", TransactionType.EXPENSE, "Bills", 100, DateConverter.fromString("01-01-2020"), "Food", "Frequent")));
         Log.d("Main transactions ", "size 2: " + transactionMap.size());
-        createList(transactionMap);
+       // createList(metaCategoryMap);
 
 
         if (transactionMap == null) {
@@ -169,7 +169,8 @@ public class MainActivity extends AppCompatActivity {
                   //  metaCategoryMap.forEach((key, transaction) -> Log.d("map transaction "  + key , transaction.toString()));
 
                     initPieChart(categories);
-                    createList(transactionMap);
+                    Log.d("Main metaCategoryMap", metaCategoryMap.toString());
+                    createList(metaCategoryMap);
 
 
                 } catch (Exception e) {
@@ -198,9 +199,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             private void createList(HashMap<String, List<Transaction>> transactionMap) {
-                Log.d("createList", "createList size: " + String.valueOf(MainActivity.this.transactionMap.size()));
-                expandableListView = findViewById(R.id.mainTransactionELV);
-                expandableListAdapter = new TransactionExpandableListAdapter(getApplicationContext(), transactionMap);
+                Log.d("createList", "createList size: " + String.valueOf(MainActivity.this.metaCategoryMap.size()));
+                ArrayList<String> keys = new ArrayList<>(transactionMap.keySet());
+
+                expandableListAdapter = new TransactionExpandableListAdapter(getApplicationContext(), keys, metaCategoryMap);
+                Log.d("test", "test");
                 expandableListView.setAdapter(expandableListAdapter);
 
                 expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -220,8 +223,7 @@ public class MainActivity extends AppCompatActivity {
                 expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                     @Override
                     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                        String selected = MainActivity.this.transactionMap.get(MainActivity.this.transactionMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
+                        String selected = metaCategoryMap.get(metaCategoryMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
                         Toast.makeText(getApplicationContext(), selected, Toast.LENGTH_SHORT).show();
                         Log.d("createList", "selected: " + selected);
                         return true;
@@ -233,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Main JSON error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Main list error", Toast.LENGTH_SHORT).show();
                 if (error != null) {
                     Log.d("Main transaction error ", error.toString());
 
@@ -258,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
         addTransactionBtn = findViewById(R.id.mainAddTransactionButton);
         accountActivityBtn = findViewById(R.id.mainAccountButton);
         metaCategoryMap = new HashMap<>();
+        expandableListView = findViewById(R.id.mainTransactionELV);
 
 //        metaCategoryMap = new HashMap<>();
 //        List<String> metaCategoriesList = new ArrayList<>();
@@ -360,12 +363,9 @@ public class MainActivity extends AppCompatActivity {
     private void createList(HashMap<String, List<Transaction>> transactionMap) {
 
         Log.d("main createList 2", "createList size: " + String.valueOf(MainActivity.this.transactionMap.size()));
-        expandableListView = findViewById(R.id.mainTransactionELV);
 
         expandableListAdapter = new TransactionExpandableListAdapter(getApplicationContext(), transactionMap);
         expandableListView.setAdapter(expandableListAdapter);
-
-
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             int previousGroup = -1;

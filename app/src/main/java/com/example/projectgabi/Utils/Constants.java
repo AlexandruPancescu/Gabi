@@ -5,11 +5,11 @@ public class Constants {
     // ploscu
    // private static final String ROOT_URL = "http://192.168.1.102/android/v1/";
     // camin
-     private static final String ROOT_URL = "http://192.168.0.149/android/v1/";
+    // private static final String ROOT_URL = "http://192.168.0.149/android/v1/";
     //biblioteca
-    //private  static final String ROOT_URL = "http://10.30.24.134/android/v1/";
+  //  private  static final String ROOT_URL = "http://10.30.24.134/android/v1/";
     //hotspot
-   // private  static final String ROOT_URL = "http://192.168.81.217/android/v1/";
+  private  static final String ROOT_URL = "http://192.168.81.217/android/v1/";
     public static final String CREATE_TRANSACTION_URL = ROOT_URL + "createTransaction.php";
     public static final String READ_TRANSACTION_URL = ROOT_URL + "getTransactions.php";
     public static final String CREATE_USER_URL = ROOT_URL + "createUser.php";

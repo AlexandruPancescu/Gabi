@@ -74,8 +74,9 @@ public class AccountActivity extends AppCompatActivity {
                     }
                 },
                 error -> {
-                    Log.d("Error user", error.getMessage());
+                    //Log.d("Error user", error.getMessage());
                     //Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.d("Error user", "user databse send error");
                 }) {
             @Nullable
             @Override
