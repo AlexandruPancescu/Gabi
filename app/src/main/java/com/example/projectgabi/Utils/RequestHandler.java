@@ -19,6 +19,17 @@ public class RequestHandler {
 
 
     }
+    private RequestHandler(){
+        requestQueue = getRequestQueue();
+    }
+
+
+    public  static synchronized RequestHandler getInstance(){
+        if(instance == null){
+            instance = new RequestHandler();
+        }
+        return instance;
+    }
 
     public static synchronized RequestHandler getInstance(Context context) {
         if (instance == null) {
@@ -31,6 +42,7 @@ public class RequestHandler {
         if (requestQueue == null) {
             // getApplicationContext() is key, it keeps you from leaking the
             // Activity or BroadcastReceiver if someone passes one in.
+
             requestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
         }
         return requestQueue;

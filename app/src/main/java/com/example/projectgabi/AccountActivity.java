@@ -55,7 +55,6 @@ public class AccountActivity extends AppCompatActivity {
 
     }
 
-
     private void createUser() {
 
         user.setUserID(UUID.randomUUID().toString());

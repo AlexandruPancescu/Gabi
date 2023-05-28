@@ -77,7 +77,7 @@ public class TransactionActivity extends AppCompatActivity {
 
         // verify if the url is correct
         Log.d("transaction url", Constants.CREATE_TRANSACTION_URL);
-        if(Constants.CREATE_TRANSACTION_URL == null){
+        if (Constants.CREATE_TRANSACTION_URL == null) {
             Log.d("transaction url", "url is null");
             return;
         }
@@ -88,7 +88,7 @@ public class TransactionActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("transaction ", "Transaction sent" );
+                        Log.d("transaction ", "Transaction sent");
                         Toast.makeText(getApplicationContext(), "Se incarca datele..", Toast.LENGTH_SHORT).show();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -99,34 +99,34 @@ public class TransactionActivity extends AppCompatActivity {
                 }
                 ,
                 new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if(error != null && error.getMessage() != null)
-                    Log.d("transaction error", error.getMessage());
-                else{
-                    Log.d("transaction error", "Unknown error");
-                }
-                Toast.makeText(getApplicationContext(), "Eroare la incarcarea datelor", Toast.LENGTH_SHORT).show();
-            }
-        }) {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error != null && error.getMessage() != null)
+                            Log.d("transaction error", error.getMessage());
+                        else {
+                            Log.d("transaction error", "Unknown error");
+                        }
+                        Toast.makeText(getApplicationContext(), "Eroare la incarcarea datelor", Toast.LENGTH_SHORT).show();
+                    }
+                }) {
             @Nullable
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                Log.d("transaction", "Transaction " + transaction.getCategory() + " sent with value: " + transaction.getValue() );
+                Log.d("transaction", "Transaction " + transaction.getCategory() + " sent with value: " + transaction.getValue());
                 params.put("value", String.valueOf(transaction.getValue()).trim());
                 params.put("type", String.valueOf(transaction.getType()).trim());
                 params.put("category", transaction.getCategory());
                 params.put("date", DateConverter.fromDate(transaction.getDate()));
                 params.put("description", transaction.getDescription().trim());
-                params.put("id", transaction.getId().toString().trim());
-                params.put("parentCategory", transaction.getParentCategory().trim());
-               // Log.d("params", params.toString().trim());
+                params.put("id", transaction.getId().toString());
+                params.put("parentCategory", transaction.getParentCategory());
+                // Log.d("params", params.toString().trim());
 
                 return params;
             }
         };
-         RequestHandler.getInstance(this)
+        RequestHandler.getInstance(this)
                 .addToRequestQueue(stringRequest);
     }
 
@@ -158,7 +158,7 @@ public class TransactionActivity extends AppCompatActivity {
         Date date = dateConverter.fromString(dateEt.getText().toString());
         UUID uuid = UUID.randomUUID();
         String parentCategory = putParentCategory(category);
-
+        Log.d("Transaction id", uuid.toString());
         return new Transaction(String.valueOf(uuid), type, category, value, date, description, parentCategory);
     }
 

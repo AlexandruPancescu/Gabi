@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.projectgabi.Controllers.TransactionController;
 import com.example.projectgabi.R;
 import com.example.projectgabi.Transaction;
 
@@ -35,7 +37,11 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
         this.context = context;
         this.parentCategories = parentCategories;
         this.transactionHashMap = transactionHashMap;
-        Log.d("Adapter categories  ", parentCategories.toString());
+        // Log.d("Adapter categories  ", parentCategories.toString());
+    }
+
+    public boolean update(boolean deleted) {
+        return !deleted;
     }
 
 
@@ -56,7 +62,6 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        //Log.d("Adapter", "getChild: "  + transactionHashMap.get(parentCategories.get(groupPosition)).get(childPosition));
         return transactionHashMap.get(parentCategories.get(groupPosition)).get(childPosition);
     }
 
@@ -88,7 +93,7 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
         TextView headerTv = convertView.findViewById(R.id.transactionGroupNameTv);
 
         double value = this.calculateGroupTotal(name);
-        String headerValue = String.format("%s       %.2f", name, value);
+        String headerValue = String.format("%s     %.2f", name, value);
         headerTv.setText(headerValue);
         headerTv.setTypeface(null, Typeface.BOLD);
         return convertView;
@@ -106,7 +111,7 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         Transaction childName = (Transaction) this.getChild(groupPosition, childPosition); // get the child name
-
+Log.d("Adapter child", "getChildView: " + childName.getId() + " " + childName.getCategory() + " " + childName.getValue() + " " + childName.getParentCategory());
 
         if (convertView == null) {
             // inflate the view
@@ -116,11 +121,54 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
 
 
         TextView childNameTv = convertView.findViewById(R.id.transactionElementNameTv);
-      String childValue = String.format("%s   %.2f",childName.getCategory(),  childName.getValue());
+        String childValue = String.format("%s   %.2f", childName.getCategory(), childName.getValue());
         childNameTv.setText(childValue);
+        ImageView delete = convertView.findViewById(R.id.transactionDeleteIV);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Adapter click", "onClick: " + childName.getId());
 
+                for (Transaction transaction : transactionHashMap.get(childName.getParentCategory())) {
+                    if (transaction.getId().equals(childName.getId())) {
 
+                        transactionHashMap.get(childName.getParentCategory()).remove(transaction);
+
+                        TransactionController transactionController = new TransactionController();
+                        transactionController.deleteTransaction(transaction.getId());
+                        Log.d("Adapter" , "passed delete transaction");
+                        break;
+                    }
+                }
+                notifyDataSetChanged();
+            }
+        });
         return convertView;
+    }
+
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public HashMap<String, List<Transaction>> getTransactionHashMap() {
+        return transactionHashMap;
+    }
+
+    public void setTransactionHashMap(HashMap<String, List<Transaction>> transactionHashMap) {
+        this.transactionHashMap = transactionHashMap;
+    }
+
+    public ArrayList<String> getParentCategories() {
+        return parentCategories;
+    }
+
+    public void setParentCategories(ArrayList<String> parentCategories) {
+        this.parentCategories = parentCategories;
     }
 
     @Override

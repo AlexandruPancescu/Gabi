@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.projectgabi.Controllers.TransactionController;
+import com.example.projectgabi.Interfaces.TransactionCallback;
 import com.example.projectgabi.Utils.Constants;
 import com.example.projectgabi.Utils.DateConverter;
 import com.example.projectgabi.Utils.RequestHandler;
@@ -37,9 +40,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TransactionCallback {
     Intent intent;
     TextView tvWelcome, tvTest;
     Button addTransactionBtn, accountActivityBtn;
@@ -50,8 +55,9 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String, List<Transaction>> transactionMap;
     ArrayList<PieEntry> categories;
     User user;
-    ExpandableListAdapter expandableListAdapter;
+    TransactionExpandableListAdapter expandableListAdapter;
     HashMap<String, List<Transaction>> metaCategoryMap;
+    ImageView deleteTransactionIV;
 
 
     @Override
@@ -64,14 +70,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_main);
         initComponents();
+        initializeElements();
         intent = getIntent();
-        createComponents();
+        // createComponents();
 
-
-        // transactionMap.put("Food", Arrays.asList(new Transaction("1", TransactionType.EXPENSE, "Food", 110, DateConverter.fromString("01-01-2020"), "Food", "Non-Frequent")));
-        // transactionMap.put("Bills", Arrays.asList(new Transaction("2", TransactionType.EXPENSE, "Bills", 100, DateConverter.fromString("01-01-2020"), "Food", "Frequent")));
-        Log.d("Main transactions ", "size 2: " + transactionMap.size());
-       // createList(metaCategoryMap);
 
 
         if (transactionMap == null) {
@@ -93,6 +95,14 @@ public class MainActivity extends AppCompatActivity {
             Log.d("user", user.toString());
         }
 
+        if (deleteTransactionIV != null) {
+            deleteTransactionIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Main delete tr", "delete");
+                }
+            });
+        }
 
         addTransactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +120,33 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+    }
+
+    private void initializeElements() {
+
+        TransactionController transactionController = new TransactionController();
+        transactionController.createComponents(this);
+        transactionController.setTransactionCallback(new TransactionCallback() {
+            @Override
+            public void onTransactionReceived(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory,
+                                              ArrayList<PieEntry> categories ) {
+                Log.d("Main interface test", "test");
+               // showMaps(categories, transactionMapByParentCategory);
+                addChartValues(categories);
+                initPieChart(categories);
+
+                createList( metaCategoryMap );
+            }
+        });
+        transactionMap = transactionController.getTransactionMap();
+        metaCategoryMap = transactionController.getTransactionMapByParentCategory();
+        categories = (ArrayList<PieEntry>) transactionController.getCategories();
+//        Log.d("transactionMap", "size: " + transactionMap.size() + transactionMap.toString());
+//        Log.d("metaCategoryMap", metaCategoryMap.size() + " " + metaCategoryMap.toString());
+    //    this.onTransactionReceived(this.transactionMap, this.metaCategoryMap);
+
+        addChartValues(categories);
 
 
     }
@@ -145,28 +182,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    // ar trb schimba numele functiei
+    //
     private synchronized void createComponents() {
+
 
         JsonObjectRequest request = new JsonObjectRequest(Constants.READ_TRANSACTION_URL, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     Log.d("Main JSON", response.toString());
-
                     Toast.makeText(getApplicationContext(), "Adding data", Toast.LENGTH_SHORT).show();
                     getTransactionFromJson(response);
-
-
                     // initialize the pie chart
                     categories = new ArrayList<>();
 
                     // init piechart sa fie de fapt aici
                     addChartValues(categories); // get the values from the transaction
 
-                  //   transactionMap.forEach((key, transaction1) -> Log.d("transaction " + key, transaction1.toString()));
-                  //  metaCategoryMap.forEach((key, transaction) -> Log.d("map transaction "  + key , transaction.toString()));
 
                     initPieChart(categories);
                     Log.d("Main metaCategoryMap", metaCategoryMap.toString());
@@ -179,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            private void initPieChart(ArrayList<PieEntry> categories) {
+            public void initPieChart(ArrayList<PieEntry> categories) {
                 Log.d("Main transactions", "size : " + transactionMap.size());
                 Resources res = getResources();
                 PieDataSet pieDataSet = new PieDataSet(categories, "Categories");
@@ -199,11 +231,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             private void createList(HashMap<String, List<Transaction>> transactionMap) {
-                Log.d("createList", "createList size: " + String.valueOf(MainActivity.this.metaCategoryMap.size()));
+
                 ArrayList<String> keys = new ArrayList<>(transactionMap.keySet());
 
                 expandableListAdapter = new TransactionExpandableListAdapter(getApplicationContext(), keys, metaCategoryMap);
-                Log.d("test", "test");
+
                 expandableListView.setAdapter(expandableListAdapter);
 
                 expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -226,9 +258,13 @@ public class MainActivity extends AppCompatActivity {
                         String selected = metaCategoryMap.get(metaCategoryMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
                         Toast.makeText(getApplicationContext(), selected, Toast.LENGTH_SHORT).show();
                         Log.d("createList", "selected: " + selected);
+
                         return true;
                     }
+
+
                 });
+                metaCategoryMap = expandableListAdapter.getTransactionHashMap();
 
 
             }
@@ -252,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void initComponents() {
         //transactionList = new ArrayList<>();
+
         user = new User();
         this.transactionMap = new HashMap<>();
         pieChart = findViewById(R.id.mainPieChart);
@@ -261,19 +298,7 @@ public class MainActivity extends AppCompatActivity {
         accountActivityBtn = findViewById(R.id.mainAccountButton);
         metaCategoryMap = new HashMap<>();
         expandableListView = findViewById(R.id.mainTransactionELV);
-
-//        metaCategoryMap = new HashMap<>();
-//        List<String> metaCategoriesList = new ArrayList<>();
-//        metaCategoriesList = Arrays.asList(getResources().getStringArray(R.array.meta_categories));
-//
-//
-//        for (String metaCategory : metaCategoriesList) {
-//            metaCategoryMap.put(metaCategory, new ArrayList<String>());
-//
-//        }
-
-
-        //  Log.d("initComponents", "metaCategories size: " + metaCategories.size() + metaCategories.toString());
+        deleteTransactionIV = findViewById(R.id.transactionDeleteIV);
 
 
     }
@@ -288,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 JSONObject jsonTransaction = jsonArray.getJSONObject(i);
-               // Log.d("transaction json", "s " + jsonTransaction.toString());
+                // Log.d("transaction json", "s " + jsonTransaction.toString());
 
                 TransactionType type = TransactionType.valueOf(jsonTransaction.getString(Constants.KEY_TRANSACTION_TYPE));
                 String category = jsonTransaction.getString(Constants.KEY_TRANSACTION_CATEGORY);
@@ -299,8 +324,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("transaction", "parentCategory: " + parentCategory);
                 // generate an UUID for transaction
                 UUID uuid = UUID.randomUUID();
-                Transaction transaction = new Transaction(String.valueOf(uuid), type, category, value, date, description, parentCategory);
-
+                String id = jsonTransaction.getString(Constants.KEY_TRANSACTION_ID);
+                Transaction transaction = new Transaction(id, type, category, value, date, description, parentCategory);
 
                 //in the transaction map, add the transaction to the list of transactions, based on the cateogry
 
@@ -326,13 +351,9 @@ public class MainActivity extends AppCompatActivity {
 
     private synchronized void addChartValues(ArrayList<PieEntry> categories) {
 
-        Log.d("Main transactions", "adding chart values");
-
         if (transactionMap.isEmpty() || transactionMap == null) {
-            // or throw a new  exception
-            Log.d("Main transactions", "no transactions");
-            Toast.makeText(getApplicationContext(), "No transactions, you can add how many you want!", Toast.LENGTH_SHORT).show();
-            // end the method
+
+         //  Toast.makeText(getApplicationContext(), "No transactions, you can add how many you want!", Toast.LENGTH_SHORT).show();
             return;
         } else {
             Log.d("Main transactions", "transactions found");
@@ -355,17 +376,20 @@ public class MainActivity extends AppCompatActivity {
         // Pie chart data set
         PieDataSet pieDataSet = new PieDataSet(categories, "Transactions by category");
 
-        categories.forEach(pieEntry1 -> Log.d("Main pieEntry", pieEntry1.toString()));
 
     }
 
 
-    private void createList(HashMap<String, List<Transaction>> transactionMap) {
+    private void createList(HashMap<String, List<Transaction>> metaCategoryMap  ) {
 
-        Log.d("main createList 2", "createList size: " + String.valueOf(MainActivity.this.transactionMap.size()));
+        ArrayList<String> keys = new ArrayList<>(metaCategoryMap.keySet());
 
-        expandableListAdapter = new TransactionExpandableListAdapter(getApplicationContext(), transactionMap);
+        expandableListAdapter = new TransactionExpandableListAdapter(getApplicationContext(), keys, metaCategoryMap);
+        expandableListAdapter.setTransactionHashMap(metaCategoryMap);
+        Log.d("Main create list ", metaCategoryMap.toString());
+
         expandableListView.setAdapter(expandableListAdapter);
+
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             int previousGroup = -1;
@@ -375,24 +399,86 @@ public class MainActivity extends AppCompatActivity {
                 if (groupPosition != previousGroup && previousGroup != -1) {
                     expandableListView.collapseGroup(previousGroup);
                 }
-                Log.d("createList2 ", "groupPosition: " + groupPosition);
                 previousGroup = groupPosition;
+                Log.d("createList", "groupPosition: " + groupPosition);
             }
         });
 
+        HashMap<String, List<Transaction>> finalMetaCategoryMap = metaCategoryMap;
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                String selected = MainActivity.this.transactionMap.get(MainActivity.this.transactionMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
+                String selected = finalMetaCategoryMap.get(finalMetaCategoryMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
                 Toast.makeText(getApplicationContext(), selected, Toast.LENGTH_SHORT).show();
-                Log.d("createList2 ", "onChildClick: " + selected);
+                Log.d("createList", "selected: " + selected);
 
                 return true;
             }
+
+
         });
+        metaCategoryMap = expandableListAdapter.getTransactionHashMap();
 
 
+    }
+
+
+
+    public static void showMaps(ArrayList<PieEntry> categories, HashMap<String, List<Transaction>> transactionMap){
+
+      Log.d("Main TransactionMap Static method: ", transactionMap.toString());
+       // this.addChartValues(categories);
+        if (transactionMap.isEmpty() || transactionMap == null) {
+
+            return;
+        } else {
+            Log.d("Main transactions", "transactions found");
+        }
+
+        if (categories == null) {
+            categories = new ArrayList<>();
+        }
+
+        // add the value of each object, based on the key set, then  make a new Pientry object and add it to the list
+
+        for (String category : transactionMap.keySet()) {
+            double value = 0;
+            for (Transaction transaction : transactionMap.get(category)) {
+                value += transaction.getValue();
+            }
+            categories.add(new PieEntry((float) value, category));
+        }
+
+        // Pie chart data set
+        PieDataSet pieDataSet = new PieDataSet(categories, "Transactions by category");
+    }
+
+    @Override
+    public void onTransactionReceived(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory, ArrayList<PieEntry> categories ) {
+        Log.d("Main onTransactionReceived", "onTransactionReceived: " + transactionHashMap.toString());
+        Log.d("Main onTransactionReceived", "onTransactionReceived by category: " + transactionMapByParentCategory.toString());
+        this.transactionMap = transactionHashMap;
+        this.metaCategoryMap = transactionMapByParentCategory;
+
+    }
+
+    public void initPieChart(ArrayList<PieEntry> categories) {
+        Log.d("Main transactions", "size : " + transactionMap.size());
+        Resources res = getResources();
+        PieDataSet pieDataSet = new PieDataSet(categories, "Categories");
+        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDataSet.setValueTextColor(R.color.white);
+        pieDataSet.setValueTextSize(16f);
+
+        pieDataSet.setValueFormatter(new DefaultValueFormatter(0));
+
+        pieData = new PieData(pieDataSet);
+
+        pieChart.setData(pieData);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setCenterText("Categories");
+        pieChart.animate();
+        pieChart.invalidate();
     }
 }
 
