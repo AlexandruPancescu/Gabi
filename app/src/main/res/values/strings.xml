@@ -16,6 +16,8 @@
     <string name="passwordTestScope">password</string>
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
+    <string name="additional_acccount_information">Additional acccount information</string>
+    <string name="this_is_a_very_important_piece_on_info">this is a very important piece on info</string>
 
 
     <string-array name="meta_categories">
@@ -31,11 +33,14 @@
         <item>"Pets"</item>
         <item>"Yard"</item>
         <item>"Other"</item>
-
     </string-array>
 
-
-
-
+    <string-array name="spinnner_currencies">
+        <item>"Dollars"</item>
+        <item>"Euros"</item>
+        <item>"Ron"</item>
+        <item>"Lev"</item>
+        <item>"Yen"</item>
+    </string-array>
 
 </resources>

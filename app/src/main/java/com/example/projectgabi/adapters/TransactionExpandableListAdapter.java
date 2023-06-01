@@ -1,4 +1,4 @@
-package com.example.projectgabi.Utils;
+package com.example.projectgabi.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -10,16 +10,13 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.projectgabi.Controllers.TransactionController;
+import com.example.projectgabi.controllers.TransactionController;
 import com.example.projectgabi.R;
-import com.example.projectgabi.Transaction;
+import com.example.projectgabi.classes.Transaction;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class TransactionExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;

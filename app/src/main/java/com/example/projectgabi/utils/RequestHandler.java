@@ -1,4 +1,4 @@
-package com.example.projectgabi.Utils;
+package com.example.projectgabi.utils;
 
 import android.content.Context;
 

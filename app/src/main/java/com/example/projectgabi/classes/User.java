@@ -1,4 +1,4 @@
-package com.example.projectgabi;
+package com.example.projectgabi.classes;
 
 import java.io.Serializable;
 

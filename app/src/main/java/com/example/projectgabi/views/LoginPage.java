@@ -1,4 +1,4 @@
-package com.example.projectgabi;
+package com.example.projectgabi.views;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.projectgabi.R;
 
 public class LoginPage extends AppCompatActivity {
     Button loginBtn, newUserBtn;
@@ -41,7 +43,7 @@ public class LoginPage extends AppCompatActivity {
         newUserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AccountActivity.class);
+                Intent intent = new Intent(getApplicationContext(), NewUserActivity.class);
                 startActivity(intent);
             }
         });

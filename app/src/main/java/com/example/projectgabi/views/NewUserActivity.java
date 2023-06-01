@@ -1,6 +1,5 @@
-package com.example.projectgabi;
+package com.example.projectgabi.views;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,14 +14,16 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
-import com.example.projectgabi.Utils.Constants;
-import com.example.projectgabi.Utils.RequestHandler;
+import com.example.projectgabi.R;
+import com.example.projectgabi.classes.User;
+import com.example.projectgabi.utils.Constants;
+import com.example.projectgabi.utils.RequestHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AccountActivity extends AppCompatActivity {
+public class NewUserActivity extends AppCompatActivity {
 
     public  static final String NEW_USER_KEY = "newUser";
     Button cancelBtn, registerBtn;
@@ -32,7 +33,7 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account);
+        setContentView(R.layout.activity_new_user);
         initComponents();
 
 

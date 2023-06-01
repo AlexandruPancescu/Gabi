@@ -1,31 +1,21 @@
-package com.example.projectgabi.Controllers;
+package com.example.projectgabi.controllers;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
-import android.view.View;
-import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.example.projectgabi.Interfaces.TransactionCallback;
-import com.example.projectgabi.MainActivity;
-import com.example.projectgabi.R;
-import com.example.projectgabi.Transaction;
-import com.example.projectgabi.TransactionType;
-import com.example.projectgabi.Utils.Constants;
-import com.example.projectgabi.Utils.DateConverter;
-import com.example.projectgabi.Utils.RequestHandler;
-import com.example.projectgabi.Utils.TransactionExpandableListAdapter;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
+import com.example.projectgabi.interfaces.TransactionCallback;
+import com.example.projectgabi.views.MainActivity;
+import com.example.projectgabi.classes.Transaction;
+import com.example.projectgabi.enums.TransactionType;
+import com.example.projectgabi.utils.Constants;
+import com.example.projectgabi.utils.DateConverter;
+import com.example.projectgabi.utils.RequestHandler;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.DefaultValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +26,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class TransactionController implements TransactionCallback {
@@ -91,7 +80,7 @@ public class TransactionController implements TransactionCallback {
                 String parentCategory = jsonTransaction.getString(Constants.KEY_TRANSACTION_PARENT_CATEGORY);
                 Log.d("transaction", "parentCategory: " + parentCategory);
                 // generate an UUID for transaction
-                UUID uuid = UUID.randomUUID();
+
                 String id = jsonTransaction.getString(Constants.KEY_TRANSACTION_ID);
                 Transaction transaction = new Transaction(id, type, category, value, date, description, parentCategory);
 
@@ -118,36 +107,9 @@ public class TransactionController implements TransactionCallback {
         }
     }
 
-    public void addChartValues() {
-        if (transactionMap.isEmpty() || transactionMap == null) {
-            Log.d("Main transactions", "no transactions found");
-            return;
-        } else {
-            Log.d("Main transactions", "transactions found");
-        }
-
-        if (categories == null) {
-            categories = new ArrayList<>();
-        }
-
-        // add the value of each object, based on the key set, then  make a new Pientry object and add it to the list
-
-        for (String category : transactionMap.keySet()) {
-            double value = 0;
-            for (Transaction transaction : transactionMap.get(category)) {
-                value += transaction.getValue();
-            }
-            categories.add(new PieEntry((float) value, category));
-        }
-
-        // Pie chart data set
-        PieDataSet pieDataSet = new PieDataSet(categories, "Transactions by category");
-    } // get the values from the transaction
-
-
     public synchronized void createComponents(Context context) {
-        Log.d("TransactionController", "createComponents: " + Constants.READ_TRANSACTION_URL);
-        JsonObjectRequest request = new JsonObjectRequest(Constants.READ_TRANSACTION_URL, new Response.Listener<JSONObject>() {
+        Log.d("TransactionController", "createComponents: " + Constants.GET_TRANSACTION_URL);
+        JsonObjectRequest request = new JsonObjectRequest(Constants.GET_TRANSACTION_URL, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -157,7 +119,7 @@ public class TransactionController implements TransactionCallback {
                     Log.d("TransactionController", "transactionMap: " + transactionMap.toString());
                     Log.d("TransactionController", "transactionMapByParentCategory: " + transactionMapByParentCategory.toString());
 
-                    transactionCallback.onTransactionReceived(transactionMap, transactionMapByParentCategory, categories);
+                    transactionCallback.onReceivedTransaction(transactionMap, transactionMapByParentCategory, categories);
                     //  TransactionController.this.addChartValues(); // get the values from the transaction
 
 
@@ -221,7 +183,7 @@ public class TransactionController implements TransactionCallback {
     }
 
     @Override
-    public void onTransactionReceived(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory, ArrayList<PieEntry> categories) {
+    public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory, ArrayList<PieEntry> categories) {
 
         MainActivity.showMaps(categories, transactionMap);
     }

@@ -1,4 +1,4 @@
-package com.example.projectgabi;
+package com.example.projectgabi.views;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,9 +20,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.projectgabi.Utils.Constants;
-import com.example.projectgabi.Utils.DateConverter;
-import com.example.projectgabi.Utils.RequestHandler;
+import com.example.projectgabi.R;
+import com.example.projectgabi.classes.Transaction;
+import com.example.projectgabi.enums.TransactionType;
+import com.example.projectgabi.utils.Constants;
+import com.example.projectgabi.utils.DateConverter;
+import com.example.projectgabi.utils.RequestHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,11 +93,11 @@ public class TransactionActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         Log.d("transaction ", "Transaction sent");
                         Toast.makeText(getApplicationContext(), "Se incarca datele..", Toast.LENGTH_SHORT).show();
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
                     }
                 }
                 ,

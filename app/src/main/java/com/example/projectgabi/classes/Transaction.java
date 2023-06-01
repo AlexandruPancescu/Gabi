@@ -1,5 +1,7 @@
-package com.example.projectgabi;
+package com.example.projectgabi.classes;
 
+
+import com.example.projectgabi.enums.TransactionType;
 
 import java.io.Serializable;
 import java.util.Date;

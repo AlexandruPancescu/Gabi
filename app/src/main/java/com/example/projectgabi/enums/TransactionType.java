@@ -1,4 +1,4 @@
-package com.example.projectgabi;
+package com.example.projectgabi.enums;
 
 public enum TransactionType {
 

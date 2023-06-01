@@ -1,4 +1,4 @@
-package com.example.projectgabi;
+package com.example.projectgabi.views;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,12 +17,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.projectgabi.Controllers.TransactionController;
-import com.example.projectgabi.Interfaces.TransactionCallback;
-import com.example.projectgabi.Utils.Constants;
-import com.example.projectgabi.Utils.DateConverter;
-import com.example.projectgabi.Utils.RequestHandler;
-import com.example.projectgabi.Utils.TransactionExpandableListAdapter;
+import com.example.projectgabi.R;
+import com.example.projectgabi.classes.Transaction;
+import com.example.projectgabi.enums.TransactionType;
+import com.example.projectgabi.classes.User;
+import com.example.projectgabi.controllers.TransactionController;
+import com.example.projectgabi.interfaces.TransactionCallback;
+import com.example.projectgabi.utils.Constants;
+import com.example.projectgabi.utils.DateConverter;
+import com.example.projectgabi.utils.RequestHandler;
+import com.example.projectgabi.adapters.TransactionExpandableListAdapter;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -40,8 +43,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements TransactionCallback {
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
         // createComponents();
 
 
-
         if (transactionMap == null) {
             Toast.makeText(this, "not empty", Toast.LENGTH_SHORT).show();
             Log.d("transactionMap", "not empty");
@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
             tvWelcome.setText(welcomeMessaage);
         }
 
-        if (intent.hasExtra(AccountActivity.NEW_USER_KEY)) {
-            user = (User) intent.getSerializableExtra(AccountActivity.NEW_USER_KEY);
+        if (intent.hasExtra(NewUserActivity.NEW_USER_KEY)) {
+            user = (User) intent.getSerializableExtra(NewUserActivity.NEW_USER_KEY);
             tvWelcome.setText("Welcome, " + user.getFirstName());
             Log.d("user", user.toString());
         }
@@ -129,22 +129,22 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
         transactionController.createComponents(this);
         transactionController.setTransactionCallback(new TransactionCallback() {
             @Override
-            public void onTransactionReceived(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory,
-                                              ArrayList<PieEntry> categories ) {
+            public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory,
+                                              ArrayList<PieEntry> categories) {
                 Log.d("Main interface test", "test");
-               // showMaps(categories, transactionMapByParentCategory);
+                // showMaps(categories, transactionMapByParentCategory);
                 addChartValues(categories);
                 initPieChart(categories);
+                createList(transactionMapByParentCategory);
 
-                createList( metaCategoryMap );
             }
         });
         transactionMap = transactionController.getTransactionMap();
         metaCategoryMap = transactionController.getTransactionMapByParentCategory();
         categories = (ArrayList<PieEntry>) transactionController.getCategories();
-//        Log.d("transactionMap", "size: " + transactionMap.size() + transactionMap.toString());
-//        Log.d("metaCategoryMap", metaCategoryMap.size() + " " + metaCategoryMap.toString());
-    //    this.onTransactionReceived(this.transactionMap, this.metaCategoryMap);
+        Log.d("transactionMap", "size: " + transactionMap.size() + transactionMap.toString());
+        Log.d("metaCategoryMap", metaCategoryMap.size() + " " + metaCategoryMap.toString());
+        //    this.onTransactionReceived(this.transactionMap, this.metaCategoryMap);
 
         addChartValues(categories);
 
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
     private synchronized void createComponents() {
 
 
-        JsonObjectRequest request = new JsonObjectRequest(Constants.READ_TRANSACTION_URL, new Response.Listener<JSONObject>() {
+        JsonObjectRequest request = new JsonObjectRequest(Constants.GET_TRANSACTION_URL, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
 
         if (transactionMap.isEmpty() || transactionMap == null) {
 
-         //  Toast.makeText(getApplicationContext(), "No transactions, you can add how many you want!", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(getApplicationContext(), "No transactions, you can add how many you want!", Toast.LENGTH_SHORT).show();
             return;
         } else {
             Log.d("Main transactions", "transactions found");
@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
     }
 
 
-    private void createList(HashMap<String, List<Transaction>> metaCategoryMap  ) {
+    private void createList(HashMap<String, List<Transaction>> metaCategoryMap) {
 
         ArrayList<String> keys = new ArrayList<>(metaCategoryMap.keySet());
 
@@ -423,11 +423,10 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
     }
 
 
+    public static void showMaps(ArrayList<PieEntry> categories, HashMap<String, List<Transaction>> transactionMap) {
 
-    public static void showMaps(ArrayList<PieEntry> categories, HashMap<String, List<Transaction>> transactionMap){
-
-      Log.d("Main TransactionMap Static method: ", transactionMap.toString());
-       // this.addChartValues(categories);
+        Log.d("Main TransactionMap Static method: ", transactionMap.toString());
+        // this.addChartValues(categories);
         if (transactionMap.isEmpty() || transactionMap == null) {
 
             return;
@@ -454,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
     }
 
     @Override
-    public void onTransactionReceived(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory, ArrayList<PieEntry> categories ) {
+    public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory, ArrayList<PieEntry> categories) {
         Log.d("Main onTransactionReceived", "onTransactionReceived: " + transactionHashMap.toString());
         Log.d("Main onTransactionReceived", "onTransactionReceived by category: " + transactionMapByParentCategory.toString());
         this.transactionMap = transactionHashMap;
