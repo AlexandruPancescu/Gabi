@@ -23,16 +23,29 @@
     <string-array name="meta_categories">
         <item>"Frequent"</item>
         <item>"Non-frequent"</item>
-        <item>"Life"</item>
+        <item>"Savings and Investments"</item>
         <item>"Other"</item>
     </string-array>
 
     <string-array name="spinner_category_list">
-        <item>"Bills"</item>
-        <item>"Clothes"</item>
+        <item>"Mortgage/Rent"</item>
+        <item>"Electricity"</item>
+        <item>"Water"</item>
+        <item>"Phone bills"</item>
+        <item>"Cable-Internet Subscription"</item>
+
+        <item>"Food"</item>
         <item>"Pets"</item>
-        <item>"Yard"</item>
+        <item>"Car"</item>
+        <item>"Clothes"</item>
+        <item>"Health"</item>
+        <item>"Going out"</item>
+        <item>"Entertainment"</item>
         <item>"Other"</item>
+
+        <item>"Savings"</item>
+        <item>"Investments"</item>
+
     </string-array>
 
     <string-array name="spinnner_currencies">

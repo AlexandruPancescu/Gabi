@@ -74,6 +74,18 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
         </com.github.mikephil.charting.charts.PieChart>
 
+        <Button
+            android:id="@+id/mainCreateBudgetBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="28dp"
+            android:text="create Budget"
+            app:layout_constraintBottom_toTopOf="@+id/mainPieChart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
         <FrameLayout
             android:id="@+id/mainTransactionFrameLayout"
             android:layout_width="384dp"
@@ -93,7 +105,11 @@ xmlns:android="http://schemas.android.com/apk/res/android">
     android:layout_height="match_parent">
 
 </ExpandableListView>
+
+
         </FrameLayout>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

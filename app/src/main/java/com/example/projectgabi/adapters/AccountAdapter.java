@@ -37,7 +37,7 @@ public class AccountAdapter extends ArrayAdapter<Account> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        View row =inflater.inflate(this.resource, parent , false);
+        View row = inflater.inflate(this.resource, parent , false);
         accountNameTv =row.findViewById(R.id.accountBankNameTv);
         accountBalanceTv =row.findViewById(R.id.accountBalanceValueTv);
         accountCurrencyTv =row.findViewById(R.id.accountCurrencyTv);

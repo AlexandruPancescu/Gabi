@@ -174,8 +174,6 @@ public class TransactionActivity extends AppCompatActivity {
             case "Yard":
             case "Food":
                 return "Non-Frequent";
-            case "Clothes":
-                return "Life";
             default:
                 return "Other";
         }

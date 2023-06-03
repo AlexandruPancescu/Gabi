@@ -11,4 +11,6 @@ public interface TransactionCallback {
    void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap,
                               HashMap<String, List<Transaction>> transactionMapByParentCategory , ArrayList<PieEntry> categories );
 
+   void getTransactions(ArrayList<Transaction> transactions);
+
 }

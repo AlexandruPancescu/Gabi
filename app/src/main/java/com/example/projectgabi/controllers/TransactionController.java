@@ -9,7 +9,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.projectgabi.interfaces.TransactionCallback;
-import com.example.projectgabi.views.MainActivity;
 import com.example.projectgabi.classes.Transaction;
 import com.example.projectgabi.enums.TransactionType;
 import com.example.projectgabi.utils.Constants;
@@ -26,20 +25,22 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class TransactionController implements TransactionCallback {
 
     TransactionCallback transactionCallback;
-    ArrayList<PieEntry> categories;
+    ArrayList<PieEntry> categoriesPieEntries;
+    ArrayList<Transaction> transactions;
+
     HashMap<String, List<Transaction>> transactionMap;
     HashMap<String, List<Transaction>> transactionMapByParentCategory;
 
     public TransactionController() {
 //        transactionCallback = new MainActivity();
-        categories = new ArrayList<>();
+        categoriesPieEntries = new ArrayList<>();
         transactionMap = new HashMap<>();
         transactionMapByParentCategory = new HashMap<>();
+        transactions = new ArrayList<>();
     }
 
     public void deleteTransaction(String transactionId) {
@@ -86,6 +87,7 @@ public class TransactionController implements TransactionCallback {
 
                 //in the transaction map, add the transaction to the list of transactions, based on the cateogry
 
+                transactions.add(transaction);
 
                 if (transactionMap.containsKey(transaction.getCategory())) {
                     transactionMap.get(transaction.getCategory()).add(transaction);
@@ -107,7 +109,7 @@ public class TransactionController implements TransactionCallback {
         }
     }
 
-    public synchronized void createComponents(Context context) {
+    public synchronized void getTransactionsFromDB(Context context) {
         Log.d("TransactionController", "createComponents: " + Constants.GET_TRANSACTION_URL);
         JsonObjectRequest request = new JsonObjectRequest(Constants.GET_TRANSACTION_URL, new Response.Listener<JSONObject>() {
             @Override
@@ -119,12 +121,8 @@ public class TransactionController implements TransactionCallback {
                     Log.d("TransactionController", "transactionMap: " + transactionMap.toString());
                     Log.d("TransactionController", "transactionMapByParentCategory: " + transactionMapByParentCategory.toString());
 
-                    transactionCallback.onReceivedTransaction(transactionMap, transactionMapByParentCategory, categories);
-                    //  TransactionController.this.addChartValues(); // get the values from the transaction
-
-
-                    // createList(transactionMapByParentCategory);
-
+                    transactionCallback.onReceivedTransaction(transactionMap, transactionMapByParentCategory, categoriesPieEntries);
+                    transactionCallback.getTransactions(transactions);
 
                 } catch (Exception e) {
                     Log.d("TransactionController", "error in json catch" + e.toString());
@@ -150,12 +148,13 @@ public class TransactionController implements TransactionCallback {
 
     }
 
-    public List<PieEntry> getCategories() {
-        return categories;
+
+    public List<PieEntry> getCategoriesPieEntries() {
+        return categoriesPieEntries;
     }
 
-    public void setCategories(ArrayList<PieEntry> categories) {
-        this.categories = categories;
+    public void setCategoriesPieEntries(ArrayList<PieEntry> categoriesPieEntries) {
+        this.categoriesPieEntries = categoriesPieEntries;
     }
 
     public HashMap<String, List<Transaction>> getTransactionMap() {
@@ -185,64 +184,12 @@ public class TransactionController implements TransactionCallback {
     @Override
     public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory, ArrayList<PieEntry> categories) {
 
-        MainActivity.showMaps(categories, transactionMap);
+        // MainActivity.showMaps(categories, transactionMap);
     }
-    //    private void initPieChart(ArrayList<PieEntry> categories) {
-//
-//        Log.d("Main transactions", "size : " + transactionMap.size());
-//        Resources res = getResources();
-//        PieDataSet pieDataSet = new PieDataSet(categories, "Categories");
-//        pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-//        pieDataSet.setValueTextColor(R.color.white);
-//        pieDataSet.setValueTextSize(16f);
-//
-//        pieDataSet.setValueFormatter(new DefaultValueFormatter(0));
-//
-//        pieData = new PieData(pieDataSet);
-//
-//        pieChart.setData(pieData);
-//        pieChart.getDescription().setEnabled(false);
-//        pieChart.setCenterText("Categories");
-//        pieChart.animate();
-//        pieChart.invalidate();
-//
-//    }
+
+    @Override
+    public void getTransactions(ArrayList<Transaction> transactions) {
+
+    }
+
 }
-//            private void createList(HashMap<String, List<Transaction>> transactionMap) {
-//
-//                ArrayList<String> keys = new ArrayList<>(transactionMap.keySet());
-//
-//                expandableListAdapter = new TransactionExpandableListAdapter(getApplicationContext(), keys, metaCategoryMap);
-//
-//                expandableListView.setAdapter(expandableListAdapter);
-//
-//                expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//
-//                    int previousGroup = -1;
-//
-//                    @Override
-//                    public void onGroupExpand(int groupPosition) {
-//                        if (groupPosition != previousGroup && previousGroup != -1) {
-//                            expandableListView.collapseGroup(previousGroup);
-//                        }
-//                        previousGroup = groupPosition;
-//                        Log.d("createList", "groupPosition: " + groupPosition);
-//                    }
-//                });
-//
-//                expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//                    @Override
-//                    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-//                        String selected = metaCategoryMap.get(metaCategoryMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
-//                        Toast.makeText(getApplicationContext(), selected, Toast.LENGTH_SHORT).show();
-//                        Log.d("createList", "selected: " + selected);
-//
-//                        return true;
-//                    }
-//
-//
-//                });
-//                metaCategoryMap = expandableListAdapter.getTransactionHashMap();
-//
-//
-//            }

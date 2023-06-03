@@ -18,6 +18,20 @@
         android:usesCleartextTraffic="true"
         tools:ignore="HardcodedDebugMode">
         <activity
+            android:name=".views.SetUpBudgetActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".views.BudgetTrackerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".views.NewBankAccount"
             android:exported="false">
             <meta-data
@@ -38,7 +52,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <activity android:name=".views.MainActivity"></activity>
+        <activity android:name=".views.MainActivity" />
         <activity
             android:name=".views.LoginPage"
             android:exported="true">
@@ -48,7 +62,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.TransactionActivity"></activity>
+        <activity android:name=".views.TransactionActivity" />
     </application>
 
 </manifest>
