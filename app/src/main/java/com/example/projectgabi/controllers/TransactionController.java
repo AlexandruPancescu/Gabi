@@ -190,6 +190,7 @@ public class TransactionController implements TransactionCallback {
     @Override
     public void getTransactions(ArrayList<Transaction> transactions) {
 
+
     }
 
 }
