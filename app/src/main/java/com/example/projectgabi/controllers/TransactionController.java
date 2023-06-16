@@ -29,6 +29,7 @@ import java.util.List;
 public class TransactionController implements TransactionCallback {
 
     TransactionCallback transactionCallback;
+
     ArrayList<PieEntry> categoriesPieEntries;
     ArrayList<Transaction> transactions;
 
@@ -36,7 +37,6 @@ public class TransactionController implements TransactionCallback {
     HashMap<String, List<Transaction>> transactionMapByParentCategory;
 
     public TransactionController() {
-//        transactionCallback = new MainActivity();
         categoriesPieEntries = new ArrayList<>();
         transactionMap = new HashMap<>();
         transactionMapByParentCategory = new HashMap<>();
@@ -87,7 +87,7 @@ public class TransactionController implements TransactionCallback {
 
                 //in the transaction map, add the transaction to the list of transactions, based on the cateogry
 
-                transactions.add(transaction);
+                this.transactions.add(transaction);
 
                 if (transactionMap.containsKey(transaction.getCategory())) {
                     transactionMap.get(transaction.getCategory()).add(transaction);
@@ -118,14 +118,14 @@ public class TransactionController implements TransactionCallback {
                     Log.d("TransactionController JSON", response.toString());
 
                     TransactionController.this.getTransactionFromJson(response);
-                    Log.d("TransactionController", "transactionMap: " + transactionMap.toString());
-                    Log.d("TransactionController", "transactionMapByParentCategory: " + transactionMapByParentCategory.toString());
+//                    Log.d("TransactionController", "transactionMap: " + transactionMap.toString());
+//                    Log.d("TransactionController", "transactionMapByParentCategory: " + transactionMapByParentCategory.toString());
 
                     transactionCallback.onReceivedTransaction(transactionMap, transactionMapByParentCategory, categoriesPieEntries);
                     transactionCallback.getTransactions(transactions);
 
                 } catch (Exception e) {
-                    Log.d("TransactionController", "error in json catch" + e.toString());
+                    Log.d("TransactionController", "error in json catch"  + " " + e.getLocalizedMessage());
 
                 }
             }

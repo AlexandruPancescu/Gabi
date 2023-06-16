@@ -26,6 +26,7 @@ public class Transaction implements Serializable {
         this.date = date;
         this.description = description;
         this.parentCategory = parentCategory;
+
     }
 
     public String getId() {

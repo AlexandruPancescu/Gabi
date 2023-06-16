@@ -16,8 +16,6 @@ public class RequestHandler {
     private RequestHandler(Context context) {
         ctx = context;
         requestQueue = getRequestQueue();
-
-
     }
     private RequestHandler(){
         requestQueue = getRequestQueue();

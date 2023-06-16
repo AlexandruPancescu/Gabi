@@ -1,11 +1,13 @@
 package com.example.projectgabi.views;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -30,6 +32,7 @@ import com.example.projectgabi.utils.RequestHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,11 +40,12 @@ import java.util.UUID;
 
 public class TransactionActivity extends AppCompatActivity {
 
-    Button saveBtn, cancelBtn;
+    Button saveBtn, cancelBtn, pickDateBtn;
     EditText amountEt, descriptionEt, dateEt;
     Spinner categorySpn;
     RadioGroup typeToggle;
-
+    DatePicker datePicker;
+    String transactionDate;
     Intent intent;
     public static final String TRANSACTION_KEY = "transaction";
 
@@ -74,6 +78,40 @@ public class TransactionActivity extends AppCompatActivity {
 
             }
         });
+
+        pickDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             //   datePicker.setVisibility(View.VISIBLE);
+                final Calendar c = Calendar.getInstance();
+
+                // on below line we are getting
+                // our day, month and year.
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                // on below line we are creating a variable for date picker dialog.
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        // on below line we are passing context.
+                       TransactionActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // on below line we are setting date to our text view.
+                                transactionDate = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+
+                            }
+                        },
+                        // on below line we are passing year,
+                        // month and day for selected date in our date picker.
+                        year, month, day);
+                // at last we are calling show to
+                // display our date picker dialog.
+                datePickerDialog.show();
+            }
+        });
     }
 
     private void sendTransaction(Transaction transaction) {
@@ -91,7 +129,7 @@ public class TransactionActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("transaction ", "Transaction sent");
+                        Log.d("transaction ", response.toString());
                         Toast.makeText(getApplicationContext(), "Se incarca datele..", Toast.LENGTH_SHORT).show();
 //                        try {
 //                            JSONObject jsonObject = new JSONObject(response);
@@ -140,10 +178,13 @@ public class TransactionActivity extends AppCompatActivity {
         amountEt = findViewById(R.id.transactionValueEditText);
         descriptionEt = findViewById(R.id.transactionDescriptionEditText);
         typeToggle = findViewById(R.id.transactionTypeToggle);
-        dateEt = findViewById(R.id.transactionDateInput);
+       // dateEt = findViewById(R.id.transactionDateInput);
+
+        pickDateBtn = findViewById(R.id.transactionPickDateBtn);
 
         ArrayAdapter<CharSequence> categoryAdapter =
-                ArrayAdapter.createFromResource(getApplicationContext(), R.array.spinner_category_list, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+                ArrayAdapter.createFromResource(getApplicationContext(),
+                        R.array.spinner_category_list, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
 
         categorySpn = findViewById(R.id.transactionCategorySpinner);
         categorySpn.setAdapter(categoryAdapter);
@@ -158,7 +199,14 @@ public class TransactionActivity extends AppCompatActivity {
 
         String description = descriptionEt.getText().toString();
         DateConverter dateConverter = new DateConverter();
-        Date date = dateConverter.fromString(dateEt.getText().toString());
+        // by default the date is the current date
+       Date date = Calendar.getInstance().getTime();
+        if(transactionDate == null) {
+            Toast.makeText(getApplicationContext(), "It shall have the current date", Toast.LENGTH_SHORT).show();
+        }else{
+            date = dateConverter.fromString(transactionDate);
+        }
+
         UUID uuid = UUID.randomUUID();
         String parentCategory = putParentCategory(category);
         Log.d("Transaction id", uuid.toString());
@@ -167,6 +215,7 @@ public class TransactionActivity extends AppCompatActivity {
 
     private String putParentCategory(String category) {
         // make switch case for each category
+        // to do, make a list of frequent categories, like in the array values
         switch (category) {
             case "Bills":
                 return "Frequent";

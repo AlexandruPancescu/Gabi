@@ -94,14 +94,14 @@
         android:id="@+id/transactionDescriptionEditText"
         android:layout_width="246dp"
         android:layout_height="52dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="72dp"
         android:ems="10"
-        android:text="Please enter a description"
         android:gravity="start|top"
         android:hint="@string/description"
         android:inputType="textMultiLine"
+        android:text="Please enter a description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transactionValueInput"
         tools:ignore="TouchTargetSizeCheck" />
@@ -110,33 +110,31 @@
         android:id="@+id/transactionSavingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="104dp"
         android:text="save"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactionDateInput" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/transactionCancellingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="104dp"
         android:text="cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/transactionSavingButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactionDateInput" />
+        app:layout_constraintHorizontal_bias="0.446"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/transactionDateInput"
+    <Button
+        android:id="@+id/transactionPickDateBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:ems="10"
-        android:inputType="date"
-        android:text="01-01-2020"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="112dp"
+        android:text="pick a date, loser"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transactionDescriptionEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

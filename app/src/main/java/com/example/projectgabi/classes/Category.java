@@ -9,13 +9,14 @@ public class Category {
     private String categoryName;
     private double categoryAmount; // working name for the money spent on the category
     private String parentCategory;
-    private ArrayList<Transaction> transactions;
+    private ArrayList<Transaction> transactions = new ArrayList<>();
 
     public Category( String categoryName, String parentCategory) {
         this.categoryID = UUID.randomUUID().toString();
         this.categoryName = categoryName;
         this.parentCategory = parentCategory;
         this.categoryAmount = 0 ;
+        this.transactions = new ArrayList<>();
     }
 
     public Category() {
@@ -90,6 +91,14 @@ public class Category {
         this.transactions = transactions;
     }
 
+    public String showTransactions(){
+        String transactions = "";
+        for (Transaction transaction : this.transactions) {
+            transactions += transaction.toString() + "\n";
+        }
+        return transactions;
+    }
+
     public String getParentCategory() {
         return parentCategory;
     }
@@ -100,11 +109,13 @@ public class Category {
 
     @Override
     public String toString() {
+
         return "Category{" +
                 "categoryID='" + categoryID + '\'' +
                 ", categoryName='" + categoryName + '\'' +
                 ", categoryName='" + parentCategory + '\'' +
                 ", categoryAmount=" + categoryAmount +
+               +
                 '}';
     }
 }

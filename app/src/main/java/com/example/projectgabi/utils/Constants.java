@@ -7,13 +7,13 @@ public class Constants {
   //  private static final String ROOT_URL = "http://192.168.1.81/android/v1/";
 
     // ploscu
-     private static final String ROOT_URL = "http://192.168.1.100/android/v1/";
+   // private static final String ROOT_URL = "http://192.168.1.100/android/v1/";
     // camin
-  //  private static final String ROOT_URL = "http://192.168.0.150/android/v1/";
-    //biblioteca
+    private static final String ROOT_URL = "http://192.168.0.150/android/v1/";
+    //  biblioteca
     // private  static final String ROOT_URL = "http://10.30.24.134/android/v1/";
     //hotspot
-    // private  static final String ROOT_URL = "http://192.168.103.217/android/v1/";
+   //  private  static final String ROOT_URL = "http://192.168.103.217/android/v1/";
     public static final String GET_BANK_ACCOUNTS_URL = ROOT_URL + "getBankAccounts.php";
     public static final String CREATE_TRANSACTION_URL = ROOT_URL + "createTransaction.php";
     public static final String GET_TRANSACTION_URL = ROOT_URL + "getTransactions.php";
@@ -27,6 +27,7 @@ public class Constants {
     public static final String GET_BUDGET_ITEMS_URL = ROOT_URL + "getBudgetItems.php";
     public static final String GET_BUDGET_BY_INTERVAL_URL = ROOT_URL + "getBudgetByDate.php";
     public static final String GET_BUDGET_BUNDLE_URL = ROOT_URL + "getBudgetBundle.php";
+    public static final String GET_BUDGETS_DATES_URL = ROOT_URL + "getBudgetDates.php";
 
 
 
@@ -55,8 +56,8 @@ public class Constants {
     public static final String KEY_BUDGET_BY_DATE_KEY = "budget";
 
     public static final String KEY_BUDGET_ID = "PK_BudgetID";
-    public static final String KEY_BUDGET_START_DATE = "StartDate";
-    public static final String KEY_BUDGET_END_DATE = "EndDate";
+    public static final String KEY_BUDGET_START_DATE = "startDate";
+    public static final String KEY_BUDGET_END_DATE = "endDate";
     public static final String KEY_BUDGET_USER_ID = "FK_UserID";
 
     // keys for budget item operations

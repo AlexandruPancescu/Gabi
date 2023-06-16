@@ -11,6 +11,9 @@
     <color name="switch_light_grey">#D3D3D3</color>
     <color name="piechart_green_1">#068A3B</color>
     <color name="transparent">#00000000</color>
+    <color name="progress_bar_red">#ff0000</color>
+    <color name="progress_bar_green">#00FF00</color>
+    <color name="progress_bar_orange">#FFFF00</color>
 
 
 </resources>

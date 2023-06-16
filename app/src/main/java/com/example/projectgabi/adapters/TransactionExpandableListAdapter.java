@@ -84,10 +84,10 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
         if (convertView == null) {
             // inflate the view
             LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.transaction_group, null);
+            convertView = layoutInflater.inflate(R.layout.parent_category_group, null);
         }
 
-        TextView headerTv = convertView.findViewById(R.id.transactionGroupNameTv);
+        TextView headerTv = convertView.findViewById(R.id.parentCategoryGroupNameTv);
 
         double value = this.calculateGroupTotal(name);
         String headerValue = String.format("%s     %.2f", name, value);
@@ -107,8 +107,8 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        Transaction childName = (Transaction) this.getChild(groupPosition, childPosition); // get the child name
-Log.d("Adapter child", "getChildView: " + childName.getId() + " " + childName.getCategory() + " " + childName.getValue() + " " + childName.getParentCategory());
+        Transaction transaction = (Transaction) this.getChild(groupPosition, childPosition); // get the child name
+        Log.d("Adapter child", "getChildView: " + transaction.getId() + " " + transaction.getCategory() + " " + transaction.getValue() + " " + transaction.getParentCategory());
 
         if (convertView == null) {
             // inflate the view
@@ -118,22 +118,22 @@ Log.d("Adapter child", "getChildView: " + childName.getId() + " " + childName.ge
 
 
         TextView childNameTv = convertView.findViewById(R.id.transactionElementNameTv);
-        String childValue = String.format("%s   %.2f", childName.getCategory(), childName.getValue());
+        String childValue = String.format("%s   %.2f", transaction.getCategory(), transaction.getValue());
         childNameTv.setText(childValue);
         ImageView delete = convertView.findViewById(R.id.transactionDeleteIV);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Adapter click", "onClick: " + childName.getId());
+                Log.d("Adapter click", "onClick: " + transaction.getId());
 
-                for (Transaction transaction : transactionHashMap.get(childName.getParentCategory())) {
-                    if (transaction.getId().equals(childName.getId())) {
+                for (Transaction transaction : transactionHashMap.get(transaction.getParentCategory())) {
+                    if (transaction.getId().equals(transaction.getId())) {
 
-                        transactionHashMap.get(childName.getParentCategory()).remove(transaction);
+                        transactionHashMap.get(transaction.getParentCategory()).remove(transaction);
 
                         TransactionController transactionController = new TransactionController();
                         transactionController.deleteTransaction(transaction.getId());
-                        Log.d("Adapter" , "passed delete transaction");
+                        Log.d("Adapter", "passed delete transaction");
                         break;
                     }
                 }

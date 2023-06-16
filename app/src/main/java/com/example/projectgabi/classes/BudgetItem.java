@@ -3,7 +3,7 @@ package com.example.projectgabi.classes;
 public class BudgetItem {
 
     private String budgetID;
-private String categoryID;
+    private String categoryID;
     private Category category;
     private double budgetItemAmount;
 

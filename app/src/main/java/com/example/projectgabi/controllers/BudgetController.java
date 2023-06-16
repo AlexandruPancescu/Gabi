@@ -2,6 +2,7 @@ package com.example.projectgabi.controllers;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -12,8 +13,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.projectgabi.classes.Budget;
 import com.example.projectgabi.classes.BudgetItem;
 import com.example.projectgabi.classes.Category;
+import com.example.projectgabi.interfaces.BudgetByDate;
 import com.example.projectgabi.interfaces.BudgetCallBack;
-import com.example.projectgabi.managers.BudgetSingletonManager;
+import com.example.projectgabi.interfaces.BudgetDatesCallBack;
 import com.example.projectgabi.utils.Constants;
 import com.example.projectgabi.utils.DateConverter;
 import com.example.projectgabi.utils.RequestHandler;
@@ -23,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,10 +34,39 @@ public class BudgetController {
     ArrayList<BudgetItem> budgetItems = new ArrayList<>();
     ArrayList<Category> categories = new ArrayList<>();
     BudgetCallBack budgetCallBack;
+    BudgetDatesCallBack budgetDatesCallBack;
     CategoryController categoryController;
-    BudgetSingletonManager budgetSingletonManager = BudgetSingletonManager.getInstance();
+    BudgetByDate budgetByDateCallBack;
+    ArrayList<String> budgetDates = new ArrayList<>();
 
 
+    public void getBudgetDates(Context context){
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.GET_BUDGETS_DATES_URL, null,
+                response -> {
+            Log.d("BudgetController", "getBudgetDates: " + response.toString());
+                    try {
+                        JSONArray jsonArray = response.getJSONArray("budget dates");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String startDate = jsonObject.getString("StartDate");
+                            String endDate = jsonObject.getString("EndDate");
+                            budgetDates.add( startDate + " - " + endDate);
+
+
+                        }
+                        budgetDatesCallBack.onReceivedBudgetDates(budgetDates);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    Log.d("BudgetController", "getBudgetDates: " + error.getMessage());
+                });
+
+        RequestHandler.getInstance(context).addToRequestQueue(jsonObjectRequest);
+
+    }
     public void createBudget(Context context, Budget budget) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.CREATE_BUDGET_URL,
@@ -86,55 +116,50 @@ public class BudgetController {
     }
 
     // no so good
-//    public synchronized Budget getBudgetByInterval(Context context, String startDate, String endDate) {
-//
-//        String request = Constants.GET_BUDGET_BUNDLE_URL + "?startDate=" + startDate + "&endDate=" + endDate;
-//
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(request,
-//                response -> {
-//                    Log.d("BudgetController date response", response.toString());
-//                    try {
-//                        this.budget = this.getBudgetFromJSON(response);
-//
-//                        budgetCallBack.onReceivedBudget(budget, budgetItems, categories);
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                },
-//                error -> {
-//                    Log.d("BudgetController date error ", "error" + error.getMessage());
-//                });
-//
-//
-//        RequestHandler.getInstance(context).addToRequestQueue(jsonObjectRequest);
-//
-//
-//        return budgetSingletonManager.getBudget();
-//
-//    }
+    public synchronized void getBudgetByInterval(Context context, String startDate, String endDate) {
+
+        String request = Constants.GET_BUDGET_BY_INTERVAL_URL + "?startDate=" + startDate + "&endDate=" + endDate;
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(request,
+                response -> {
+                    Log.d("BudgetController date response", response.toString());
+                    try {
+                        this.budget = this.getBudgetFromJSON(response);
+                        budgetByDateCallBack.onReceivedBudgetByDate(budget);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {
+                    Toast.makeText(context, "The selected budget doesn't have previous date", Toast.LENGTH_SHORT).show();
+                    Log.d("BudgetController date error ",  error.getMessage());
+                });
+
+
+        RequestHandler.getInstance(context).addToRequestQueue(jsonObjectRequest);
+
+    }
 
     // retrieve the budget by interval, with his budget items and categories
     public void getBudgetBundle(Context context, String startDate, String endDate) {
 
         String request = Constants.GET_BUDGET_BUNDLE_URL + "?startDate=" + startDate + "&endDate=" + endDate;
-
+Log.d("BudgetController date", request);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(request,
                 response -> {
                     Log.d("BudgetController date response", response.toString());
 
-
                     try {
                         BudgetController.this.makeBudgetBundle(response);
                         budgetCallBack.onReceivedBudget(budget, budgetItems, categories);
+                        Log.d("BudgetController date response", budget.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
-                },
+                }
+                ,
                 error -> {
-                    Log.d("BudgetController date error ", "error" + error.getMessage());
+                    Log.d("BudgetController date error ",  error.getMessage());
                 });
 
         RequestHandler.getInstance(context).addToRequestQueue(jsonObjectRequest);
@@ -152,7 +177,7 @@ public class BudgetController {
         this.budget = getBudgetFromJSON(bundleJSOn.getJSONObject(Constants.KEY_BUDGET_BY_DATE_KEY));
         this.budgetItems =  getBudgetItemsFromJSON(bundleJSOn.getJSONArray(Constants.KEY_BUDGETS));
         this.categories =  getCategoriesFromJSON(bundleJSOn.getJSONArray(Constants.KEY_CATEGORY_ARRAY_KEY), this.budgetItems);
-
+        Log.d("BudgetController", "makeBudgetBundle: " + this.categories.toString() + " " + this.budgetItems.toString() + " " + this.budget.toString());
 
     }
 
@@ -239,6 +264,22 @@ public class BudgetController {
 
     public void setCategoryController(CategoryController categoryController) {
         this.categoryController = categoryController;
+    }
+
+    public BudgetDatesCallBack getBudgetDatesCallBack() {
+        return budgetDatesCallBack;
+    }
+
+    public void setBudgetDatesCallBack(BudgetDatesCallBack budgetDatesCallBack) {
+        this.budgetDatesCallBack = budgetDatesCallBack;
+    }
+
+    public BudgetByDate getBudgetByDateCallBack(BudgetByDate budgetByDate) {
+        return budgetByDateCallBack;
+    }
+
+    public void setBudgetByDateCallBack(BudgetByDate budgetByDateCallBack) {
+        this.budgetByDateCallBack = budgetByDateCallBack;
     }
 }
 
