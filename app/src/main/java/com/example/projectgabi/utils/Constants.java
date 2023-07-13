@@ -4,16 +4,16 @@ public class Constants {
 
 
     // ploscu2
-  //  private static final String ROOT_URL = "http://192.168.1.81/android/v1/";
+    //  private static final String ROOT_URL = "http://192.168.1.81/android/v1/";
 
     // ploscu
-   // private static final String ROOT_URL = "http://192.168.1.100/android/v1/";
+    // private static final String ROOT_URL = "http://192.168.1.100/android/v1/";
     // camin
-    private static final String ROOT_URL = "http://192.168.0.150/android/v1/";
+       private static final String ROOT_URL = "http://192.168.1.101/android/v1/";
     //  biblioteca
     // private  static final String ROOT_URL = "http://10.30.24.134/android/v1/";
     //hotspot
-   //  private  static final String ROOT_URL = "http://192.168.103.217/android/v1/";
+    //  private  static final String ROOT_URL = "http://192.168.249.217/android/v1/";
     public static final String GET_BANK_ACCOUNTS_URL = ROOT_URL + "getBankAccounts.php";
     public static final String CREATE_TRANSACTION_URL = ROOT_URL + "createTransaction.php";
     public static final String GET_TRANSACTION_URL = ROOT_URL + "getTransactions.php";
@@ -30,7 +30,6 @@ public class Constants {
     public static final String GET_BUDGETS_DATES_URL = ROOT_URL + "getBudgetDates.php";
 
 
-
     // keys for transactions
     public static final String KEY_TRANSACTION_TYPE = "type";
     public static final String KEY_TRANSACTION_CATEGORY = "category";
@@ -43,12 +42,12 @@ public class Constants {
 
 
     // keys for accounts bd operations
-    public  static final String KEY_ACCOUNT_ARRAY_KEY = "accounts";
-    public static  final String KEY_ACCOUNT_ID = "id";
-    public static  final String KEY_ACCOUNT_NAME = "bankName";
-    public static  final String KEY_ACCOUNT_BALANCE = "balance";
-    public static  final String KEY_ACCOUNT_CURRENCY = "currency";
-    public static  final String KEY_ACCOUNT_ADDITIONAL_INFO = "additionalInfo";
+    public static final String KEY_ACCOUNT_ARRAY_KEY = "accounts";
+    public static final String KEY_ACCOUNT_ID = "id";
+    public static final String KEY_ACCOUNT_NAME = "bankName";
+    public static final String KEY_ACCOUNT_BALANCE = "balance";
+    public static final String KEY_ACCOUNT_CURRENCY = "currency";
+    public static final String KEY_ACCOUNT_ADDITIONAL_INFO = "additionalInfo";
 
     // keys for budget bd operations
 
@@ -74,8 +73,7 @@ public class Constants {
 
     // keys for Budget bundle operations
 
-public static final String KEY_BUDGET_BUNDLE_ARRAY_KEY = "bundle";
-
+    public static final String KEY_BUDGET_BUNDLE_ARRAY_KEY = "bundle";
 
 
 }

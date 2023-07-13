@@ -209,6 +209,7 @@ public class TransactionActivity extends AppCompatActivity {
 
         UUID uuid = UUID.randomUUID();
         String parentCategory = putParentCategory(category);
+        Log.d("Parent category", parentCategory);
         Log.d("Transaction id", uuid.toString());
         return new Transaction(String.valueOf(uuid), type, category, value, date, description, parentCategory);
     }
@@ -217,12 +218,27 @@ public class TransactionActivity extends AppCompatActivity {
         // make switch case for each category
         // to do, make a list of frequent categories, like in the array values
         switch (category) {
-            case "Bills":
+            case "Mortgage/Rent":
+            case "Electricity":
+            case "Water":
+            case "Phone bills":
+            case "Cable-Internet Subscription":
                 return "Frequent";
-            case "Pets":
+
+            case "Clothes":
             case "Yard":
+            case "Health":
+            case "Going out":
+            case "Pets":
+            case "Car":
+            case "Entertainment":
             case "Food":
                 return "Non-Frequent";
+
+            case "Savings":
+            case "Investments":
+                return "Savings and Investments";
+
             default:
                 return "Other";
         }

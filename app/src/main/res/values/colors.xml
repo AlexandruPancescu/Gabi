@@ -13,7 +13,8 @@
     <color name="transparent">#00000000</color>
     <color name="progress_bar_red">#ff0000</color>
     <color name="progress_bar_green">#00FF00</color>
-    <color name="progress_bar_orange">#FFFF00</color>
+    <color name="progress_bar_orange">#FFA500</color>
+    <color name="p_bar_pale_green">#B9FBB9</color>
 
 
 </resources>

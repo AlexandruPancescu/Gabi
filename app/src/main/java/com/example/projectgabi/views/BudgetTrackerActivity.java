@@ -15,7 +15,7 @@ import android.widget.Spinner;
 
 import com.example.projectgabi.R;
 import com.example.projectgabi.adapters.BudgetItemExpandableListAdapter;
-import com.example.projectgabi.charts.BudgetCombinedChart;
+import com.example.projectgabi.charts.BudgetViewCC;
 import com.example.projectgabi.classes.Budget;
 import com.example.projectgabi.classes.BudgetItem;
 import com.example.projectgabi.classes.Category;
@@ -75,8 +75,6 @@ public class BudgetTrackerActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
 
@@ -92,7 +90,6 @@ public class BudgetTrackerActivity extends AppCompatActivity {
         Log.d("BudgetTrackerActivity", "retrieveElementsData: " + startDate + " " + endDate);
         budgetController = new BudgetController();
         budgetController.getBudgetBundle(context, startDate, endDate);
-        //  budgetController.getBudgetBundle(context, "02-02-2023", "02-03-2023");
 
         budgetController.setBudgetCallBack(new BudgetCallBack() {
             @Override
@@ -102,17 +99,13 @@ public class BudgetTrackerActivity extends AppCompatActivity {
                 budget.setBudgetItems(budgetItems);
                 BudgetTrackerActivity.this.setCategoriesValues(categories, budget, budgetItems);
 
-
-
             }
-
         });
-
     }
 
     private void initializeCombineChart(Budget budget, ArrayList<Category> categories) {
 
-        BudgetCombinedChart budgetCombinedChart = new BudgetCombinedChart();
+        BudgetViewCC budgetCombinedChart = new BudgetViewCC();
         budgetCombinedChart.setContext(context);
 
         Log.d("BudgetTrackerActivity", "budget: " + budget.toString());
@@ -148,7 +141,7 @@ public class BudgetTrackerActivity extends AppCompatActivity {
                     }
                 }
                 BudgetTrackerActivity.this.initializeCombineChart(budget, categories);
-                BudgetTrackerActivity.this.initializeListView( context,  categories,budgetItems, transactions); ;
+                BudgetTrackerActivity.this.initializeListView( context,  categories,budgetItems, transactions,budget ); ;
 
             }
         });
@@ -156,12 +149,13 @@ public class BudgetTrackerActivity extends AppCompatActivity {
     }
 
     private void initializeListView(Context context, ArrayList<Category> categories,
-                                    ArrayList<BudgetItem> budgetItems, ArrayList<Transaction> transactions) {
+                                    ArrayList<BudgetItem> budgetItems, ArrayList<Transaction> transactions ,Budget budget) {
 
 
-        BudgetItemExpandableListAdapter budgetAdapter  = new BudgetItemExpandableListAdapter(context,  categories,budgetItems, transactions);
+        BudgetItemExpandableListAdapter budgetAdapter  = new BudgetItemExpandableListAdapter(context,
+                categories,budgetItems, transactions, budget );
+
         budgetItemsListView.setAdapter(budgetAdapter);
-
         budgetItemsListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             int previousGroup = -1;
             @Override
@@ -171,6 +165,18 @@ public class BudgetTrackerActivity extends AppCompatActivity {
                 }
                 previousGroup = groupPosition;
                 Log.d("createList", "groupPosition: " + groupPosition);
+            }
+        });
+
+        HashMap<String, ArrayList<BudgetItem>> finalMap = budgetAdapter.getBudgetItemHashMap();
+        budgetItemsListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Log.d("budget tracker", "onChildClick: ");
+                String selected = finalMap.get(finalMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
+                Log.d("Budget tracker", "onChildClick: " + selected);
+                return true;
             }
         });
         }
@@ -208,7 +214,6 @@ public class BudgetTrackerActivity extends AppCompatActivity {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                         retrieveElementsData(getDateFromSpinner());
-
 
                     }
 

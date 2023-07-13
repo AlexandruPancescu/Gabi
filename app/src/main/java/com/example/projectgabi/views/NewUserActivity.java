@@ -70,13 +70,10 @@ public class NewUserActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                        Log.d("Response", response);
-                        //Toast.makeText(getApplicationContext(), "User created successfully", Toast.LENGTH_LONG).show();
                     }
                 },
                 error -> {
-                    //Log.d("Error user", error.getMessage());
-                    //Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.d("Error user", "user databse send error");
+                    Log.d("Error user", "User data not saved" + error.getMessage());
                 }) {
             @Nullable
             @Override

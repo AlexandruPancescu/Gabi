@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
         ArrayList<String> keys = new ArrayList<>(metaCategoryMap.keySet());
 
         expandableListAdapter = new TransactionExpandableListAdapter(getApplicationContext(), keys, metaCategoryMap);
-        expandableListAdapter.setTransactionHashMap(metaCategoryMap);
+        // expandableListAdapter.setTransactionHashMap(metaCategoryMap);
         Log.d("Main create list ", metaCategoryMap.toString());
 
         expandableListView.setAdapter(expandableListAdapter);

@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class BudgetCombinedChart {
+public class BudgetViewCC {
 
     private Context context;
     private final static int QUARTERS = 4; // number of quarters in wich the charts are divided
@@ -46,8 +46,6 @@ public class BudgetCombinedChart {
 
         this.makeCombinedGraph(budget, barDataSet, categories , combinedChart);
 
-
-
     }
 
     public List<BarEntry> makeBarData(Budget budget, ArrayList<Category> categories) {
@@ -58,13 +56,15 @@ public class BudgetCombinedChart {
         Date endDate = budget.getEndDate();
         // interval type [i1, i2)
 
-        List<Date> quarters = this.divideInterval(startDate, endDate, QUARTERS);
+        List<Date> weeks = this.divideInterval(startDate, endDate, QUARTERS);
 
-        Log.d("BudgetCC" , quarters.size() + quarters.toString());
+//        Log.d("BudgetCC" , weeks.size() + weeks.toString());
 
-        for (int i = 0 ; i < quarters.size() -1 ; i++){
+        for (int i = 0 ; i < weeks.size() - 1 ; i++){
             barEntries.add(new BarEntry(i,
-                    this.getCategoryValueByDate(categories, quarters.get(i), quarters.get(i+1))));
+                    this.getCategoryValueByDate(categories, weeks.get(i), weeks.get(i+1))));
+            Log.d("BudgetCC" , " " + weeks.get(i) + " " + weeks.get(i+1));
+            Log.d("BudgetCC" , " " + this.getCategoryValueByDate(categories, weeks.get(i), weeks.get(i+1)));
         }
 
         return barEntries ;
@@ -77,10 +77,15 @@ public class BudgetCombinedChart {
         // for each cateogry, go throught every Transaction list and if the Transaction date is between interval1 and interval2 add its value to quarterSum
         float quarterSum = 0;
         for(Category category : categories){
+            if (category.getTransactions() == null) continue;
+            if (category.getTransactions().size() == 0) continue;
+
             for(Transaction transaction : category.getTransactions()){
+
                 if(transaction.getDate().after(interval1 )
                         && transaction.getDate().before(interval2)
                         || transaction.getDate().equals(interval1)){
+                    Log.d("BudgetCC" , " " + transaction.getDate() + " " + transaction.getValue());
                     quarterSum += transaction.getValue();
                 }
             }
@@ -89,10 +94,10 @@ public class BudgetCombinedChart {
     }
 
     public BarDataSet makeBarDataSet(List<BarEntry> barEntries, String label) {
-        BarDataSet barDataSet = new BarDataSet(barEntries,label);
-        barDataSet.setColor(Color.BLUE);
-        barDataSet.setValueTextSize(12f);
-        barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        BarDataSet barDataSet = new BarDataSet(barEntries, label);
+        barDataSet.setDrawValues(false);
+        barDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
         int[] barColors = new int[]{
                 Color.parseColor("#FF5722"),
                 Color.parseColor("#FFC107"),
@@ -108,7 +113,7 @@ public class BudgetCombinedChart {
         calendar.setTime(date);
         calendar.add(Calendar.MONTH, -1);
         Date previousMonth = budget.getStartDate();
-        previousMonth.setMonth(previousMonth.getMonth() - 1);
+        previousMonth.setMonth(previousMonth.getMonth() );
 
         return DateConverter.fromDate(calendar.getTime());
     }
@@ -118,9 +123,9 @@ public class BudgetCombinedChart {
         List<Entry > lineEntries = new ArrayList<>();
         String startDate ;
         String endDate ;
-        endDate = DateConverter.fromDate(budget.getStartDate());
-        startDate = this.getPreviousMonth(budget, budget.getStartDate());
 
+        endDate = this.getPreviousMonth(budget, budget.getEndDate());
+        startDate = this.getPreviousMonth(budget, budget.getStartDate());
 
         BudgetController budgetController = new BudgetController();
         budgetController.getBudgetBundle(context, startDate, endDate);
@@ -139,54 +144,53 @@ public class BudgetCombinedChart {
 
                    transactionController.setTransactionCallback(new TransactionCallback() {
                        @Override
-                       public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory, ArrayList<PieEntry> categories) {
+                       public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap,
+                                                         HashMap<String, List<Transaction>> transactionMapByParentCategory,
+                                                         ArrayList<PieEntry> categories) {
                        }
 
                        @Override
                        public void getTransactions(ArrayList<Transaction> transactions) {
 
                            previousBudget.setBudgetItems(budgetItems);
-
+                             Log.d("BudgetCC", "previousBudget: " + previousBudget.toString());
                            // add transactions to categories
                            for (Category category : categories) {
                                for (Transaction transaction : transactions) {
                                    if (category.getCategoryName().equals(transaction.getCategory())) {
                                        category.getTransactions().add(transaction);
                                        category.setCategoryAmount(category.getCategoryAmount() + transaction.getValue());
+                                       Log.d("BudgetCC", "category: " + category.getCategoryName() + " " + category.getCategoryAmount());
                                    }
                                }
                            }
 
                            // set-up line chart values
-                           List<Entry>lineEntriesPreviousBudget =  BudgetCombinedChart.this.setLineChartValues(previousBudget, categories);
+                           List<Entry>lineEntriesPreviousBudget =  BudgetViewCC.this.setLineChartValues(previousBudget, categories);
 
-                           BudgetCombinedChart.this.setUpCombinedChart(lineEntriesPreviousBudget, barDataSet, combinedChart, budget);
+                           BudgetViewCC.this.setUpCombinedChart(lineEntriesPreviousBudget, barDataSet, combinedChart, budget);
                        }
                    });
-
                 }
-
         });
 
         Log.d("BudgetCC", "lineEntries: " + lineEntries.toString());
-
-
-
 
         combinedChart.invalidate();
     }
 
     private void setUpCombinedChart(List<Entry> lineEntries, BarDataSet barDataSet, CombinedChart combinedChart, Budget budget) {
 
-        LineDataSet lineDataSet = new LineDataSet(lineEntries, "Expenses by time");
+        LineDataSet lineDataSet = new LineDataSet(lineEntries, "Last month expenses");
         lineDataSet.setColor(Color.RED);
         lineDataSet.setValueTextSize(12f);
         lineDataSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
         lineDataSet.setColor(Color.parseColor("#2196F3"));
+        // change the position of the value inside the chart
 
-        CombinedData combinedData = BudgetCombinedChart.this.makeCombinedData(barDataSet, lineDataSet);
+        CombinedData combinedData = BudgetViewCC.this.makeCombinedData(barDataSet, lineDataSet);
 
-        BudgetCombinedChart.this.initializeCombinedDataChart(combinedChart, combinedData, budget);
+        BudgetViewCC.this.initializeCombinedDataChart(combinedChart, combinedData, budget);
 
         combinedChart.invalidate();
         combinedData.notifyDataChanged();
@@ -196,7 +200,7 @@ public class BudgetCombinedChart {
     private List<Entry> setLineChartValues(Budget previousBudget, ArrayList<Category> categories) {
 
         List<Entry> lineEntries = new ArrayList<>();
-
+        Log.d("BudgetCC", "previousBudget: " + previousBudget.toString());
         List<Date> quarters = this.divideInterval(previousBudget.getStartDate(), previousBudget.getEndDate(), QUARTERS);
 
         for (int i = 0 ; i < quarters.size() -1 ; i++){
@@ -226,25 +230,24 @@ public class BudgetCombinedChart {
         for (int i = 0 ; i<  intervals.size() -1; i++){
 
             Log.d("BudgetCC" , DateConverter.fromDate(intervals.get(i)));
-            labels[i] = "Q" + (1+i) + ": "+ "\n"+ intervals.get(i).getDate() + " - " + intervals.get(i).getMonth();
+            labels[i] = "W" + (1+i)  ;
         }
 
         // Set up X-axis
         XAxis xAxis = combinedChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextSize(12f);
         xAxis.setTextColor(Color.BLACK);
         xAxis.setDrawAxisLine(true);
         xAxis.setDrawGridLines(false);
+         xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
 
         // Set up Y-axis
         YAxis leftAxis = combinedChart.getAxisLeft();
         leftAxis.setTextSize(12f);
         leftAxis.setTextColor(Color.BLACK);
-
         YAxis rightAxis = combinedChart.getAxisRight();
         rightAxis.setEnabled(false);
 
@@ -253,25 +256,24 @@ public class BudgetCombinedChart {
         combinedChart.setDrawOrder(new CombinedChart.DrawOrder[]{
                 CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.LINE});
         combinedChart.setPinchZoom(true);
-        combinedChart.setDoubleTapToZoomEnabled(false);
+        combinedChart.setDoubleTapToZoomEnabled(true);
         combinedChart.setDrawGridBackground(false);
-
-        // Set up chart description and legend
-        Description description = new Description();
-//        description.setText("Combined Chart");
-//        combinedChart.setDescription(description);
-
-
         combinedChart.setDrawGridBackground(true);
         combinedChart.setGridBackgroundColor(Color.WHITE);
         combinedChart.setBorderColor(Color.LTGRAY);
         combinedChart.setBorderWidth(1f);
-
-
         combinedChart.setExtraBottomOffset(16f);
         combinedChart.setExtraTopOffset(16f);
         combinedChart.setExtraRightOffset(32f);
         combinedChart.setExtraLeftOffset(32f);
+
+        // set the first bar of the barchart to have a space before it
+        BarData barData = combinedChart.getBarData();
+        BarDataSet barDataSet = (BarDataSet) barData.getDataSetByIndex(0);
+
+        barDataSet.setBarBorderWidth(0.9f);
+
+
 
     }
 

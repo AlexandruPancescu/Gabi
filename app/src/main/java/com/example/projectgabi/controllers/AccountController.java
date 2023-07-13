@@ -38,9 +38,6 @@ public class AccountController implements AccountCallback {
     public void createAccount(Context context, Account account) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.CREATE_BANK_ACCOUNT_URL, response -> {
-            // Log.d("New bank account", " account " + account.getBankName() + " created successfully");
-
-
         }, error -> {
             Log.d("New Bank account", error.toString());
         }) {
@@ -62,14 +59,14 @@ public class AccountController implements AccountCallback {
 
     }
 
+//    Log.d("new Account message", response.toString())  ;
+//              Log.d("New Account getAccounts", accounts.toString());
+
     public synchronized void getAccounts(Context context) {
-        Log.d("New Account ", "start of db getAccounts");
         JsonObjectRequest request = new JsonObjectRequest(Constants.GET_BANK_ACCOUNTS_URL, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
               AccountController.this.getBankAccountsFromJSON(response);
-              Log.d("new Account message", response.toString())  ;
-              Log.d("New Account getAccounts", accounts.toString());
               accountCallback.onReceivedAccount(accounts);
             }
         }, new Response.ErrorListener() {

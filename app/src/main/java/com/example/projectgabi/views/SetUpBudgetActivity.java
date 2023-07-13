@@ -31,7 +31,7 @@ public class SetUpBudgetActivity extends AppCompatActivity {
     Intent intent;
     Context context;
     Button createBudgetBtn, setUpDatesBtn;
-    EditText startDate, endDate, mortgage, utilities, phone,
+    EditText startDate, water,  endDate, mortgage, electricity, phone,
             cableAndInternet, food, car, health, entertainment,
             pets, clothing, goingOut, other, savings, investments;
     ArrayList<Category> categories;
@@ -176,9 +176,10 @@ public class SetUpBudgetActivity extends AppCompatActivity {
 
 
             mortgage = findViewById(R.id.editTextMortgageRent);
-            utilities = findViewById(R.id.editTextUtilities);
+            electricity = findViewById(R.id.editTextElectricity);
             phone = findViewById(R.id.editTextPhoneBills);
             cableAndInternet = findViewById(R.id.editTextCableInternet);
+            water = findViewById(R.id.editWater);
 
             food = findViewById(R.id.editTextFood);
             pets = findViewById(R.id.editTextPets);
@@ -210,10 +211,10 @@ public class SetUpBudgetActivity extends AppCompatActivity {
 
     private void initializeCategoryList() {
         categories.add(new Category("Mortgage/Rent", "Frequent"));
-
-        categories.add(new Category("Utilities", "Frequent"));
+        categories.add(new Category("Electricity", "Frequent"));
         categories.add(new Category("Phone Bills", "Frequent"));
-        categories.add(new Category("Cable/Internet", "Frequent"));
+        categories.add(new Category("Cable-Internet Subscription", "Frequent"));
+        categories.add(new Category("Water", "Frequent"));
 
         categories.add(new Category("Food", "Non-Frequent"));
         categories.add(new Category("Pets", "Non-Frequent"));
@@ -229,7 +230,7 @@ public class SetUpBudgetActivity extends AppCompatActivity {
         categories.add(new Category("Other", "Other"));
 
         editTexts.add(mortgage);
-        editTexts.add(utilities);
+        editTexts.add(electricity);
         editTexts.add(phone);
         editTexts.add(cableAndInternet);
         editTexts.add(food);
@@ -238,6 +239,7 @@ public class SetUpBudgetActivity extends AppCompatActivity {
         editTexts.add(clothing);
         editTexts.add(health);
         editTexts.add(goingOut);
+        editTexts.add(water);
         editTexts.add(entertainment);
         editTexts.add(savings);
         editTexts.add(investments);

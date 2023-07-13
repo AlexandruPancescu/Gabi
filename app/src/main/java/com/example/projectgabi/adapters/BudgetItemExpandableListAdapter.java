@@ -2,7 +2,10 @@ package com.example.projectgabi.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +42,9 @@ public class BudgetItemExpandableListAdapter extends BaseExpandableListAdapter {
         this.context = context;
     }
 
-    public BudgetItemExpandableListAdapter(Context context,  ArrayList<Category> categoryArrayList,
-                                           ArrayList<BudgetItem> budgetItemArrayList, ArrayList<Transaction> transactions) {
+    public BudgetItemExpandableListAdapter(Context context, ArrayList<Category> categoryArrayList,
+                                           ArrayList<BudgetItem> budgetItemArrayList, ArrayList<Transaction> transactions,
+                                           Budget budget) {
         this.context = context;
         this.budget = budget;
         this.categoryArrayList = categoryArrayList;
@@ -94,6 +98,7 @@ public class BudgetItemExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String name = this.getGroup(groupPosition).toString();
+        Log.d("BudgetItem Adapter", "getGroupView: " + name);
 
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -112,32 +117,72 @@ public class BudgetItemExpandableListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         BudgetItem budgetItem = (BudgetItem) this.getChild(groupPosition, childPosition);
         Log.d("BudgetItem Adapter", "getChildView: " + budgetItem.toString());
-        if(convertView != null){
+        if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.view_butget_item, null);
         }
 
-
-        TextView budgetItemCategory = convertView.findViewById(R.id.budgetICategoryName);
-        TextView budgetItemAmount = convertView.findViewById(R.id.budgetIAmountTv);
-        TextView budgetItemSpent = convertView.findViewById(R.id.budgetISpentTv);
+        TextView budgetItemCategory = convertView.findViewById(R.id.budgetItemCategoryName);
+        TextView budgetedTv = convertView.findViewById(R.id.budgetItemAmountTv);
+        TextView spentTv = convertView.findViewById(R.id.budgetItemSpentTv);
         ProgressBar progressBar = convertView.findViewById(R.id.budgetItemProgressBar);
 
+
+        float spentAmount = this.getSpentAmount(budgetItem);
+        double budgetItemAmount = budgetItem.getBudgetItemAmount();
+
         budgetItemCategory.setText(budgetItem.getCategory().getCategoryName());
-        budgetItemAmount.setText(String.valueOf(budgetItem.getBudgetItemAmount()));
-        budgetItemSpent.setText(String.valueOf(budgetItem.getCategory().getCategoryAmount()));
+        budgetedTv.setText(String.valueOf(budgetItemAmount));
+        spentTv.setText(String.valueOf(spentAmount));
 
-        progressBar.setMax((int) budgetItem.getBudgetItemAmount());
-        progressBar.setProgress((int) budgetItem.getCategory().getCategoryAmount());
+        Log.d("BudgetItem Adapter", "amounts: " + spentAmount + " " + budgetItemAmount + " " + budgetItem.getCategory().getCategoryAmount());
+        Log.d("BudgetItem Adapter", "getChildView: " + spentAmount + " " + budgetItemAmount);
 
-        if(budgetItem.getCategory().getCategoryAmount() > budgetItem.getBudgetItemAmount()) {
+
+        if (spentAmount < budgetItemAmount) {
+            if (spentAmount ==0 ){
+                progressBar.setProgress(0);
+                progressBar.setProgressTintList(context.getResources().getColorStateList(R.color.switch_light_grey));
+            }else{
+
+           Drawable progressDrawable =  progressBar.getProgressDrawable();
+              progressDrawable.setColorFilter(context.getResources().getColor(R.color.progress_bar_green),
+                      PorterDuff.Mode.MULTIPLY);
+
+            progressBar.setProgressDrawable(progressDrawable);
+
+            }
+        } else if (spentAmount == budgetItemAmount) {
+            progressBar.setProgressTintList(context.getResources().getColorStateList(R.color.progress_bar_orange));
+            progressBar.setProgress((int) budgetItemAmount);
+            progressBar.setMax((int) budgetItemAmount);
+        } else if (spentAmount > budgetItemAmount) {
+            progressBar.setProgress((int) budgetItemAmount);
+            progressBar.setMax((int) budgetItemAmount);
             progressBar.setProgressTintList(context.getResources().getColorStateList(R.color.progress_bar_red));
         }
+//        else {
+//            progressBar.setProgress(0);
+//            progressBar.setProgressTintList(context.getResources().getColorStateList(R.color.switch_light_grey));
+//        }
 
-        if(budgetItem.getCategory().getCategoryAmount() > budgetItem.getBudgetItemAmount() * 0.75) {
-            progressBar.setProgressTintList(context.getResources().getColorStateList(R.color.progress_bar_orange));
+
+
+        return convertView;
+    }
+
+    private float getSpentAmount(BudgetItem budgetItem) {
+        float spentAmount = 0;
+        Log.d("BudgetItem Adapter", "getSpentAmount: " + transactionArrayList.toString());
+        for (Transaction transaction : transactionArrayList) {
+
+            if (transaction.getCategory().equals(budgetItem.getCategory().getCategoryName())
+            && transaction.getDate().getMonth() == budget.getEndDate().getMonth() ){
+                Log.d("BudgetItem Adapter", "Transaction: " + transaction.toString());
+                spentAmount += transaction.getValue();
+            }
         }
-        return null;
+        return spentAmount;
     }
 
     @Override
@@ -148,13 +193,17 @@ public class BudgetItemExpandableListAdapter extends BaseExpandableListAdapter {
 
     public void updateBudgetItemHashMap() {
         budgetItemHashMap = new HashMap<>();
+        Log.d("BudgetItem Adapter", "updateBudgetItemHashMap: " + categoryArrayList.toString());
+        Log.d("BudgetItem Adapter", "updateBudgetItemHashMap: " + budgetItemArrayList.toString());
+
         for (Category category : categoryArrayList) {
             ArrayList<BudgetItem> budgetItems = new ArrayList<>();
             for (BudgetItem budgetItem : budgetItemArrayList) {
-                if (budgetItem.getCategory().getParentCategory().equals(category.getCategoryName())) {
+                if (budgetItem.getCategory().getParentCategory().equals(category.getParentCategory())) {
                     budgetItems.add(budgetItem);
                 }
             }
+            Log.d("BudgetItem Adapter", "updateBudgetItemHashMap: " + budgetItems.toString());
             budgetItemHashMap.put(category.getParentCategory(), budgetItems);
         }
     }
@@ -198,5 +247,21 @@ public class BudgetItemExpandableListAdapter extends BaseExpandableListAdapter {
 
     public void setTransactionArrayList(ArrayList<Transaction> transactionArrayList) {
         this.transactionArrayList = transactionArrayList;
+    }
+
+    public List<String> getParentCategoriesList() {
+        return parentCategoriesList;
+    }
+
+    public void setParentCategoriesList(List<String> parentCategoriesList) {
+        this.parentCategoriesList = parentCategoriesList;
+    }
+
+    public HashMap<String, ArrayList<BudgetItem>> getBudgetItemHashMap() {
+        return budgetItemHashMap;
+    }
+
+    public void setBudgetItemHashMap(HashMap<String, ArrayList<BudgetItem>> budgetItemHashMap) {
+        this.budgetItemHashMap = budgetItemHashMap;
     }
 }

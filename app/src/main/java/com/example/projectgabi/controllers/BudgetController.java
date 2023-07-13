@@ -112,14 +112,13 @@ public class BudgetController {
             }
         };
         RequestHandler.getInstance(context).addToRequestQueue(stringRequest);
-
     }
 
     // no so good
     public synchronized void getBudgetByInterval(Context context, String startDate, String endDate) {
 
         String request = Constants.GET_BUDGET_BY_INTERVAL_URL + "?startDate=" + startDate + "&endDate=" + endDate;
-
+         Log.d("BudgetController date", startDate + " " + endDate);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(request,
                 response -> {
                     Log.d("BudgetController date response", response.toString());
@@ -132,7 +131,7 @@ public class BudgetController {
                 },
                 error -> {
                     Toast.makeText(context, "The selected budget doesn't have previous date", Toast.LENGTH_SHORT).show();
-                    Log.d("BudgetController date error ",  error.getMessage());
+                    Log.d("BudgetController by interval error ",  error.getMessage());
                 });
 
 
@@ -144,7 +143,8 @@ public class BudgetController {
     public void getBudgetBundle(Context context, String startDate, String endDate) {
 
         String request = Constants.GET_BUDGET_BUNDLE_URL + "?startDate=" + startDate + "&endDate=" + endDate;
-Log.d("BudgetController date", request);
+        Log.d("BudgetController date", startDate + " " + endDate);
+        Log.d("BudgetController date", request);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(request,
                 response -> {
                     Log.d("BudgetController date response", response.toString());
@@ -152,7 +152,7 @@ Log.d("BudgetController date", request);
                     try {
                         BudgetController.this.makeBudgetBundle(response);
                         budgetCallBack.onReceivedBudget(budget, budgetItems, categories);
-                        Log.d("BudgetController date response", budget.toString());
+                    //     Log.d("BudgetController date response", budget.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -200,7 +200,6 @@ Log.d("BudgetController date", request);
                     budgetItem.setCategory(category);
                 }
             }
-
         }
 
         return categories;
@@ -225,17 +224,15 @@ Log.d("BudgetController date", request);
 
     private Budget getBudgetFromJSON(JSONObject budgetJSON) throws JSONException {
 
-        // JSONObject budgetJSON = response.optJSONObject(Constants.KEY_BUDGET_BY_DATE_KEY);
-
         if (budgetJSON != null) {
             String budgetID = budgetJSON.getString(Constants.KEY_BUDGET_ID);
             String startDate = budgetJSON.getString(Constants.KEY_BUDGET_START_DATE);
             String endDate = budgetJSON.getString(Constants.KEY_BUDGET_END_DATE);
             String userID = budgetJSON.getString(Constants.KEY_BUDGET_USER_ID);
-            Log.d("BudgetController json id ", "budgetID" + budgetID);
+           // Log.d("BudgetController json id ", "budgetID" + budgetID);
             return new Budget(budgetID, DateConverter.fromString(startDate), DateConverter.fromString(endDate), userID);
         } else {
-            Log.d("BudgetController date error ", "error" + "budgetJSON is null");
+         //    Log.d("BudgetController getBudgetFromJSON err", "error" + "budgetJSON is null");
             return null;
         }
 

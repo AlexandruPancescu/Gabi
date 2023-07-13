@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 public class PieDataParceble implements Parcelable {
 
 
-
-
     protected PieDataParceble(Parcel in) {
     }
 
