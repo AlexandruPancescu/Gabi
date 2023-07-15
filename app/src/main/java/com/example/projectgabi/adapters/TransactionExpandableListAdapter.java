@@ -128,12 +128,9 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
 
                 for (Transaction transaction : transactionHashMap.get(transaction.getParentCategory())) {
                     if (transaction.getId().equals(transaction.getId())) {
-
                         transactionHashMap.get(transaction.getParentCategory()).remove(transaction);
-
                         TransactionController transactionController = new TransactionController();
                         transactionController.deleteTransaction(transaction.getId());
-                        Log.d("Adapter", "passed delete transaction");
                         break;
                     }
                 }

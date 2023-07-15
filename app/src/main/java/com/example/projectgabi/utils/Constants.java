@@ -28,6 +28,8 @@ public class Constants {
     public static final String GET_BUDGET_BY_INTERVAL_URL = ROOT_URL + "getBudgetByDate.php";
     public static final String GET_BUDGET_BUNDLE_URL = ROOT_URL + "getBudgetBundle.php";
     public static final String GET_BUDGETS_DATES_URL = ROOT_URL + "getBudgetDates.php";
+    public static final String GET_USER = ROOT_URL + "getUser.php";
+    public static final  String UPDATE_BANK_ACCOUNT_URL = ROOT_URL + "updateBankAccount.php";
 
 
     // keys for transactions

@@ -12,31 +12,6 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         android:layout_height="match_parent"
         tools:context=".views.MainActivity">
 
-        <TextView
-            android:id="@+id/testRecycleView"
-            android:layout_width="50dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="24dp"
-            android:text="Data"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.058"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainWelcomeText"
-            tools:ignore="MissingConstraints">
-
-        </TextView>
-
-        <TextView
-            android:id="@+id/mainWelcomeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Welcome, "
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <Button
             android:id="@+id/mainAccountButton"
             android:layout_width="wrap_content"
@@ -67,10 +42,11 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             android:id="@+id/mainPieChart"
             android:layout_width="384dp"
             android:layout_height="236dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="50dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.481"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/testRecycleView">
+            app:layout_constraintTop_toBottomOf="@+id/mainMonthSpinner">
 
         </com.github.mikephil.charting.charts.PieChart>
 
@@ -79,13 +55,13 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:text="Budget"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/mainPieChart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.38" />
+            app:layout_constraintVertical_bias="0.181" />
 
         <FrameLayout
             android:id="@+id/mainTransactionFrameLayout"
@@ -110,6 +86,15 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
         </FrameLayout>
 
+        <Spinner
+            android:id="@+id/mainMonthSpinner"
+            android:layout_width="114dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.053"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

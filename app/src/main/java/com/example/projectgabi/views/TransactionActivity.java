@@ -1,6 +1,7 @@
 package com.example.projectgabi.views;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,15 +24,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.projectgabi.R;
+import com.example.projectgabi.classes.Account;
 import com.example.projectgabi.classes.Transaction;
+import com.example.projectgabi.controllers.AccountController;
 import com.example.projectgabi.enums.TransactionType;
+import com.example.projectgabi.interfaces.AccountCallback;
 import com.example.projectgabi.utils.Constants;
 import com.example.projectgabi.utils.DateConverter;
 import com.example.projectgabi.utils.RequestHandler;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,13 +42,18 @@ import java.util.UUID;
 
 public class TransactionActivity extends AppCompatActivity {
 
-    Button saveBtn, cancelBtn, pickDateBtn;
+    private static int bankNumber = 1;
+    Button saveBtn;
+    Button cancelBtn;
+    Button pickDateBtn;
     EditText amountEt, descriptionEt, dateEt;
-    Spinner categorySpn;
+    Spinner categorySpn, accountSpn ;
     RadioGroup typeToggle;
+
     DatePicker datePicker;
     String transactionDate;
     Intent intent;
+    Context context = this;
     public static final String TRANSACTION_KEY = "transaction";
 
     @Override
@@ -55,6 +62,9 @@ public class TransactionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transaction);
         initComponents();
         intent = getIntent();
+
+        initializeSpinnerElements();
+
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +80,8 @@ public class TransactionActivity extends AppCompatActivity {
 
                 Transaction transaction = createTransaction();
                 sendTransaction(transaction);
+                String accountName = accountSpn.getSelectedItem().toString();
+                updateAccount(transaction, accountName);
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra(TRANSACTION_KEY, transaction);
                 setResult(RESULT_OK, intent);
@@ -112,6 +124,54 @@ public class TransactionActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+
+
+    }
+
+    private void updateAccount(Transaction transaction, String accountName) {
+
+        AccountController accountController = new AccountController();
+        accountController.setContext(context);
+        accountController.updateAccount(transaction, accountName);
+
+
+    }
+
+    private void initializeSpinnerElements() {
+
+        AccountController accountController = new AccountController();
+        accountController.getAccounts(context);
+        accountController.setAccountCallback(new AccountCallback() {
+            @Override
+            public void onReceivedAccount(ArrayList<Account> accounts) {
+                ArrayList<String > accountNames = new ArrayList<>();
+                accountNames = TransactionActivity.getAccountNames(accounts);
+                ArrayAdapter<String> accountArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, accountNames);
+                accountArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                accountSpn.setAdapter(accountArrayAdapter);
+
+            }
+        });
+
+
+    }
+
+    private static ArrayList<String> getAccountNames(ArrayList<Account> accounts) {
+        ArrayList<String> accountNames = new ArrayList<>();
+
+        for (Account account : accounts) {
+            // if the account has the same name, add the bank number to the name
+            if (accountNames.contains(account.getBankName())) {
+                int i = accountNames.indexOf(account.getBankName());
+                accountNames.set(i, account.getBankName() + " #" + bankNumber );
+                bankNumber++;
+                accountNames.add(account.getBankName() + " #" + bankNumber );
+
+                continue;
+            }
+            accountNames.add(account.getBankName() );
+        }
+        return accountNames;
     }
 
     private void sendTransaction(Transaction transaction) {
@@ -179,8 +239,9 @@ public class TransactionActivity extends AppCompatActivity {
         descriptionEt = findViewById(R.id.transactionDescriptionEditText);
         typeToggle = findViewById(R.id.transactionTypeToggle);
        // dateEt = findViewById(R.id.transactionDateInput);
-
+        accountSpn = findViewById(R.id.transactionAccountSpin);
         pickDateBtn = findViewById(R.id.transactionPickDateBtn);
+
 
         ArrayAdapter<CharSequence> categoryAdapter =
                 ArrayAdapter.createFromResource(getApplicationContext(),

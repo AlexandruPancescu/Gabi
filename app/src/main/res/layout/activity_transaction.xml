@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:tooltipText="bank account">
 
 
     <RadioGroup
@@ -57,14 +58,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="16dp"
         android:entries="@array/spinner_category_list"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactionTypeToggle"
+        app:layout_constraintTop_toBottomOf="@+id/transactionValueInput"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -75,9 +76,9 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactionCategorySpinner">
+        app:layout_constraintTop_toBottomOf="@+id/transactionAccountSpin">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/transactionValueEditText"
@@ -87,14 +88,16 @@
             android:numeric="signed|integer|decimal"
             android:phoneNumber="false"
             android:text="100"
-            tools:ignore="Deprecated" />
+            tools:ignore="Deprecated"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="316dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <EditText
         android:id="@+id/transactionDescriptionEditText"
         android:layout_width="246dp"
         android:layout_height="52dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="60dp"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/description"
@@ -103,38 +106,49 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactionValueInput"
+        app:layout_constraintTop_toBottomOf="@+id/transactionCategorySpinner"
         tools:ignore="TouchTargetSizeCheck" />
-
-    <Button
-        android:id="@+id/transactionSavingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="104dp"
-        android:text="save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/transactionCancellingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="104dp"
+        android:layout_marginBottom="36dp"
         android:text="cancel"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/transactionSavingButton"
-        app:layout_constraintHorizontal_bias="0.446"
+        app:layout_constraintHorizontal_bias="0.307"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/transactionSavingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="36dp"
+        android:text="save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/transactionPickDateBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="104dp"
         android:layout_marginEnd="140dp"
         android:text="pick a date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transactionDescriptionEditText" />
+
+    <Spinner
+        android:id="@+id/transactionAccountSpin"
+        android:layout_width="370dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="32dp"
+        android:tooltipText="choose a bank account "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transactionTypeToggle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

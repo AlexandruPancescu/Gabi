@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="user E-mail"
-            android:text="Alex" />
+            android:text="email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -56,9 +56,11 @@
         app:layout_constraintTop_toBottomOf="@+id/loginEmailInput">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginPasswordEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="user password" />
+            android:hint="user password"
+            android:text="123"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

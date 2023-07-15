@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.projectgabi.classes.Account;
+import com.example.projectgabi.classes.Transaction;
 import com.example.projectgabi.interfaces.AccountCallback;
 import com.example.projectgabi.utils.Constants;
 import com.example.projectgabi.utils.RequestHandler;
@@ -30,6 +31,7 @@ public class AccountController implements AccountCallback {
 
     ArrayList<Account> accounts;
     AccountCallback accountCallback;
+    Context context ;
 
     public AccountController() {
         this.accounts = new ArrayList();
@@ -110,6 +112,22 @@ public class AccountController implements AccountCallback {
 
     }
 
+    public void updateAccount(Transaction transaction,  String accountName) {
+        // StringRequest stringRequest = new StringRequest();
+        String url = Constants.UPDATE_BANK_ACCOUNT_URL + "?name="+accountName + "&value="+transaction.getValue()
+        +  "&type="+transaction.getType() ;
+        Log.d("New Account", "updateAccount" + url);
+
+       StringRequest stringRequest = new StringRequest(Request.Method.PUT, url, response -> {
+           Log.d("New Account", "updateAccount");
+         }, error -> {
+            Log.d("New Account", "error" + error.toString());
+        }) ;
+
+        RequestHandler.getInstance(context).addToRequestQueue(stringRequest);
+
+    }
+
     public ArrayList getAccountsList() {
         return accounts;
     }
@@ -125,6 +143,14 @@ public class AccountController implements AccountCallback {
 
     public AccountCallback getAccountCallback() {
         return accountCallback;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     public void setAccountCallback(AccountCallback accountCallback) {
