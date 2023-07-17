@@ -97,6 +97,9 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
     }
 
     private double calculateGroupTotal(String category) {
+        if (transactionHashMap.get(category) == null) {
+            return 0;
+        }
         return transactionHashMap.get(category).stream().mapToDouble(Transaction::getValue).sum();
     }
 

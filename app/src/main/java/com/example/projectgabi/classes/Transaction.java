@@ -15,6 +15,8 @@ public class Transaction implements Serializable {
     private Date date;
     private String description ;
     private String parentCategory;
+    private String fk_account;
+    private String fk_user;
 
 
 
@@ -86,6 +88,23 @@ public class Transaction implements Serializable {
     }
 
     // make a toString method using String format
+
+
+    public String getFk_account() {
+        return fk_account;
+    }
+
+    public void setFk_account(String fk_account) {
+        this.fk_account = fk_account;
+    }
+
+    public String getFk_user() {
+        return fk_user;
+    }
+
+    public void setFk_user(String fk_user) {
+        this.fk_user = fk_user;
+    }
 
     @Override
     public String toString() {

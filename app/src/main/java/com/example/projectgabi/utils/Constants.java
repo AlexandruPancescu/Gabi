@@ -13,9 +13,11 @@ public class Constants {
     //  biblioteca
     // private  static final String ROOT_URL = "http://10.30.24.134/android/v1/";
     //hotspot
-    //  private  static final String ROOT_URL = "http://192.168.249.217/android/v1/";
+      //private  static final String ROOT_URL = "http://192.168.249.217/android/v1/";
     public static final String GET_BANK_ACCOUNTS_URL = ROOT_URL + "getBankAccounts.php";
+    public static final String GET_BANK_ACCOUNT_URL = ROOT_URL + "getAccount.php";
     public static final String CREATE_TRANSACTION_URL = ROOT_URL + "createTransaction.php";
+    public static final String POST_TRANSACTION_URL = ROOT_URL + "postTransaction.php";
     public static final String GET_TRANSACTION_URL = ROOT_URL + "getTransactions.php";
     public static final String CREATE_USER_URL = ROOT_URL + "createUser.php";
     public static final String DELETE_TRANSACTION_URL = ROOT_URL + "deleteTransaction.php";
@@ -30,6 +32,8 @@ public class Constants {
     public static final String GET_BUDGETS_DATES_URL = ROOT_URL + "getBudgetDates.php";
     public static final String GET_USER = ROOT_URL + "getUser.php";
     public static final  String UPDATE_BANK_ACCOUNT_URL = ROOT_URL + "updateBankAccount.php";
+    public static final String GET_TRANSACTIONS_BY_USER_ID = ROOT_URL + "getTransactionsByUserId.php";
+
 
 
     // keys for transactions
@@ -40,7 +44,7 @@ public class Constants {
     public static final String KEY_TRANSACTION_DESCRIPTION = "description";
     public static final String KEY_TRANSACTIONS_ARRAY_KEY = "transactions";
     public static final String KEY_TRANSACTION_PARENT_CATEGORY = "parentCategory";
-    public static final String KEY_TRANSACTION_ID = "id";
+    public static final String KEY_TRANSACTION_ID = "PK_TransactionID";
 
 
     // keys for accounts bd operations
@@ -50,6 +54,7 @@ public class Constants {
     public static final String KEY_ACCOUNT_BALANCE = "balance";
     public static final String KEY_ACCOUNT_CURRENCY = "currency";
     public static final String KEY_ACCOUNT_ADDITIONAL_INFO = "additionalInfo";
+    public static final String KEY_ACCOUNT_FK_USER = "FK_UserID";
 
     // keys for budget bd operations
 

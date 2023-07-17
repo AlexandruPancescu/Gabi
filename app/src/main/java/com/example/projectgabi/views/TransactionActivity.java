@@ -1,9 +1,14 @@
 package com.example.projectgabi.views;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,6 +20,8 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,12 +34,15 @@ import com.example.projectgabi.R;
 import com.example.projectgabi.classes.Account;
 import com.example.projectgabi.classes.Transaction;
 import com.example.projectgabi.controllers.AccountController;
+import com.example.projectgabi.controllers.TransactionExcelModel;
 import com.example.projectgabi.enums.TransactionType;
 import com.example.projectgabi.interfaces.AccountCallback;
+import com.example.projectgabi.interfaces.AccountNameCallback;
 import com.example.projectgabi.utils.Constants;
 import com.example.projectgabi.utils.DateConverter;
 import com.example.projectgabi.utils.RequestHandler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,30 +50,46 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@SuppressLint("Range")
 public class TransactionActivity extends AppCompatActivity {
 
     private static int bankNumber = 1;
-    Button saveBtn;
-    Button cancelBtn;
-    Button pickDateBtn;
+    Button saveBtn, cancelBtn, pickDateBtn, importBtn;
     EditText amountEt, descriptionEt, dateEt;
     Spinner categorySpn, accountSpn ;
     RadioGroup typeToggle;
-
+ActivityResultLauncher<Intent> mGetContent;
     DatePicker datePicker;
     String transactionDate;
     Intent intent;
     Context context = this;
     public static final String TRANSACTION_KEY = "transaction";
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
+        importHandler();
         initComponents();
         intent = getIntent();
 
         initializeSpinnerElements();
+        importBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                TransactionExcelModel transactionExcelModel = new TransactionExcelModel();
+//                transactionExcelModel.setContext(context);
+//                transactionExcelModel.handleImportedTransactions(context);
+//
+               openFileExplorer();
+//                intent = new Intent(getApplicationContext(), MainActivity.class);
+//                startActivity(intent);
+//                finish();
+            }
+        });
+
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,8 +105,10 @@ public class TransactionActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Transaction transaction = createTransaction();
-                sendTransaction(transaction);
+
+                //sendTransaction(transaction, );
                 String accountName = accountSpn.getSelectedItem().toString();
+                handleTransaction(transaction,accountName);
                 updateAccount(transaction, accountName);
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra(TRANSACTION_KEY, transaction);
@@ -125,6 +153,61 @@ public class TransactionActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+
+    public void openFileExplorer() {
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent = Intent.createChooser(intent, "Choose a file");
+        mGetContent.launch(intent);
+
+    }
+
+    @SuppressLint("Range")
+    private void importHandler() {
+
+        mGetContent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Uri uri = data.getData();
+                        String uriString = uri.toString();
+                        File myFile = new File(uriString);
+                        String path = myFile.getPath();
+                        String displayName = null;
+
+                        if (uriString.startsWith("content://")) {
+                            Cursor cursor = null;
+                            try {
+                                cursor = context.getContentResolver().query(uri, null, null, null, null);
+                                if (cursor != null && cursor.moveToFirst()) {
+
+                                    displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                                }
+                            } finally {
+                                cursor.close();
+                            }
+                        } else if (uriString.startsWith("file://")) {
+                            displayName = myFile.getName();
+                        }
+
+                        Log.d("Import", "File Name : " + displayName);
+                        Log.d("Import", "File Path : " + path);
+                        // Handle the selected file here if needed
+                        TransactionExcelModel transactionExcelModel = new TransactionExcelModel();
+                        transactionExcelModel.handleImportedTransactions(path, displayName, context, uri);
+
+
+
+//                        intent = new Intent(getApplicationContext(), MainActivity.class);
+//                        startActivity(intent);
+//                        finish();
+                    }
+                });
 
     }
 
@@ -174,31 +257,18 @@ public class TransactionActivity extends AppCompatActivity {
         return accountNames;
     }
 
-    private void sendTransaction(Transaction transaction) {
-
-        // verify if the url is correct
-        Log.d("transaction url", Constants.CREATE_TRANSACTION_URL);
-        if (Constants.CREATE_TRANSACTION_URL == null) {
-            Log.d("transaction url", "url is null");
-            return;
-        }
+    private void sendTransaction(Transaction transaction, Account account) {
         // in this method the created transaction is sent to the database server
 
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.CREATE_TRANSACTION_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.POST_TRANSACTION_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.d("transaction ", response.toString());
                         Toast.makeText(getApplicationContext(), "Se incarca datele..", Toast.LENGTH_SHORT).show();
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(response);
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
+
                     }
-                }
-                ,
+                },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -222,6 +292,9 @@ public class TransactionActivity extends AppCompatActivity {
                 params.put("description", transaction.getDescription().trim());
                 params.put("id", transaction.getId().toString());
                 params.put("parentCategory", transaction.getParentCategory());
+                Log.d("transaction", "Account id: " + account.getFk_user().toString());
+                params.put("FK_AccountID", account.getAccountID());
+                params.put("FK_UserID", LoginPage.userID);
                 // Log.d("params", params.toString().trim());
 
                 return params;
@@ -231,6 +304,22 @@ public class TransactionActivity extends AppCompatActivity {
                 .addToRequestQueue(stringRequest);
     }
 
+    private void handleTransaction(Transaction transaction, String accountName) {
+        AccountController accountController = new AccountController();
+        accountController.setContext(context);
+        accountController.getAccount(accountName);
+        Log.d("transaction", "Account name: " + accountName);
+        accountController.setAccountNameCallback(new AccountNameCallback() {
+            @Override
+            public void onReceivedAccountName(Account account) {
+
+                 sendTransaction(transaction, account);
+
+            }
+        });
+
+
+    }
 
     public void initComponents() {
         saveBtn = findViewById(R.id.transactionSavingButton);
@@ -241,6 +330,7 @@ public class TransactionActivity extends AppCompatActivity {
        // dateEt = findViewById(R.id.transactionDateInput);
         accountSpn = findViewById(R.id.transactionAccountSpin);
         pickDateBtn = findViewById(R.id.transactionPickDateBtn);
+        importBtn = findViewById(R.id.transactionImportBtn);
 
 
         ArrayAdapter<CharSequence> categoryAdapter =

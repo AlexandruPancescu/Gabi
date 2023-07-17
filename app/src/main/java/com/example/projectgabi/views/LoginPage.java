@@ -19,6 +19,9 @@ import com.example.projectgabi.interfaces.UserCallback;
 public class LoginPage extends AppCompatActivity {
     Button loginBtn, newUserBtn;
     EditText usernameEt, passwordEt;
+    public static String userEmail;
+    public static String userPassword;
+    public static String userID;
 
     public static final String USERNAME_KEY = "username";
 
@@ -83,7 +86,10 @@ public class LoginPage extends AppCompatActivity {
                 }
                 if (user.getPassword().equals(password)) {
                     Log.d("LoginPage", "getUser: " + "password is correct");
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
+                        LoginPage.userEmail = user.getEmail() ;
+                        LoginPage.userPassword = user.getPassword();
+                        LoginPage.userID = user.getUserID();
                         intent.putExtra(USERNAME_KEY, usernameEt.getText().toString());
                         setResult(RESULT_OK, intent);
                         startActivity(intent);

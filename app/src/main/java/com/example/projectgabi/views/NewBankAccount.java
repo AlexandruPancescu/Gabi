@@ -14,7 +14,10 @@ import android.widget.Spinner;
 
 import com.example.projectgabi.R;
 import com.example.projectgabi.classes.Account;
+import com.example.projectgabi.classes.User;
 import com.example.projectgabi.controllers.AccountController;
+import com.example.projectgabi.controllers.UserController;
+import com.example.projectgabi.interfaces.UserCallback;
 
 import java.util.UUID;
 
@@ -32,15 +35,15 @@ public class NewBankAccount extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_bank_account);
+
         initializeComponents();
 
         createBankAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                accountController = new AccountController();
-                accountController.createAccount(context,
-                        createAccount());
+                checkData();
+
                 intent = new Intent(getApplicationContext(), AccountActivity.class);
                 startActivity(intent);
 
@@ -56,6 +59,27 @@ public class NewBankAccount extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+    }
+
+
+    private void accountHandler() {
+
+        UserController userController = new UserController();
+        String email = LoginPage.userEmail;
+        String password = LoginPage.userPassword;
+       userController.getUser(email, password );
+       userController.setUserCallback(new UserCallback() {
+           @Override
+           public void onReceivedUser(User user) {
+               accountController = new AccountController();
+               accountController.createAccount(context,
+                       createAccount(user.getUserID()));
+           }
+       });
+
+
 
 
     }
@@ -77,8 +101,21 @@ public class NewBankAccount extends AppCompatActivity {
 
     }
 
+    public void checkData() {
 
-    public Account createAccount() {
+        if (bankNameEt.getText().toString().isEmpty()) {
+            bankNameEt.setError("Please enter a bank name");
+        } else if (balanceEt.getText().toString().isEmpty()) {
+            balanceEt.setError("Please enter a balance");
+        } else if (additionalInfoEt.getText().toString().isEmpty()) {
+            additionalInfoEt.setError("Please enter additional info");
+        } else {
+            accountHandler();
+        }
+    }
+
+
+    public Account createAccount(String userId) {
 
         String bankName = bankNameEt.getText().toString();
         float balance = Float.parseFloat(balanceEt.getText().toString());
@@ -86,6 +123,6 @@ public class NewBankAccount extends AppCompatActivity {
         String info = additionalInfoEt.getText().toString();
         UUID uuid = UUID.randomUUID();
         Log.d("New Bank Creation", bankName + " " + currency + info + " inputs");
-        return new Account(String.valueOf(uuid), bankName, balance, currency, info);
+        return new Account(String.valueOf(uuid), bankName, balance, currency, info, userId);
     }
 }

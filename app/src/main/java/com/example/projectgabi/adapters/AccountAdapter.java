@@ -32,7 +32,6 @@ public class AccountAdapter extends ArrayAdapter<Account> {
         this.resource = resource;
         this.inflater = inflater;
         this.objects = objects;
-
     }
 
     @Override

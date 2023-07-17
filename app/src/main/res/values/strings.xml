@@ -18,6 +18,7 @@
     <string name="cancel">Cancel</string>
     <string name="additional_acccount_information">Additional acccount information</string>
     <string name="this_is_a_very_important_piece_on_info">this is a very important piece on info</string>
+    <string name="import_data_from_excel">Import data from excel</string>
 
 
     <string-array name="meta_categories">

@@ -42,9 +42,9 @@ public class UserController {
 
     }
 
-    public String getUserID(Context context) {
-        return "1c7b3845-9dd3-461a-8508-8a6015889a10";
-    }
+//    public String getUserID(Context context) {
+//        return "1c7b3845-9dd3-461a-8508-8a6015889a10";
+//    }
 
     public Context getContext() {
         return context;

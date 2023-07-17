@@ -16,9 +16,11 @@ import com.example.projectgabi.R;
 import com.example.projectgabi.classes.Budget;
 import com.example.projectgabi.classes.BudgetItem;
 import com.example.projectgabi.classes.Category;
+import com.example.projectgabi.classes.User;
 import com.example.projectgabi.controllers.BudgetController;
 import com.example.projectgabi.controllers.CategoryController;
 import com.example.projectgabi.controllers.UserController;
+import com.example.projectgabi.interfaces.UserCallback;
 import com.example.projectgabi.utils.DateConverter;
 
 import java.util.ArrayList;
@@ -105,17 +107,12 @@ public class SetUpBudgetActivity extends AppCompatActivity {
 
                 // aici faci get user id
                 BudgetController budgetController = new BudgetController();
-                budget = initializeBudget();
-                budgetController.createBudget(context, budget);
+                budgetHandler(budgetController);
+
+
 
                 // for categories
-                initializeBudgetItems();
 
-                CategoryController categoryController = new CategoryController();
-                createCategoriesInDb(categoryController);
-
-
-                createBudgetItemInBd(budgetController);
 
 
                 intent = new Intent(getApplicationContext(), BudgetTrackerActivity.class);
@@ -125,6 +122,27 @@ public class SetUpBudgetActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void budgetHandler(BudgetController budgetController) {
+        UserController userController = new UserController();
+        userController.setContext(context);
+        String email = LoginPage.userEmail;
+        String password = LoginPage.userPassword;
+        userController.getUser(email, password);
+
+        Log.d("budget handler", "budgetHandler: " + LoginPage.userID);
+        userController.setUserCallback(new UserCallback() {
+            @Override
+            public void onReceivedUser(User user) {
+                initializeBudget();
+                budgetController.createBudget(context, budget, user.getUserID());
+                initializeBudgetItems();
+                CategoryController categoryController = new CategoryController();
+                createCategoriesInDb(categoryController);
+                createBudgetItemInBd(budgetController);
+            }
+        });
     }
 
     private void createCategoriesInDb(CategoryController categoryController) {
@@ -142,16 +160,16 @@ public class SetUpBudgetActivity extends AppCompatActivity {
 
     }
 
-    private Budget initializeBudget() {
+    private void initializeBudget() {
 
         String id = UUID.randomUUID().toString();
         Date startDate = DateConverter.fromString(this.startDate.getText().toString());
         Date endDate = DateConverter.fromString(this.endDate.getText().toString());
         UserController userController = new UserController();
-        String user_foreign_key = userController.getUserID(context);
+        String user_foreign_key =LoginPage.userID;
         budget = new Budget(id, startDate, endDate, user_foreign_key);
         Log.d("Budget setup ",budget.toString() );
-        return new Budget(id, startDate, endDate, user_foreign_key);
+
     }
 
     private void initializeElements() {
@@ -194,8 +212,7 @@ public class SetUpBudgetActivity extends AppCompatActivity {
 
             other = findViewById(R.id.editTextOther);
         }
-        // add the values of each of the edit text variables into the categories array
-        // take the values from the R.array.spinner_category_list and put them into the categories array
+
         initializeCategoryList();
 
 

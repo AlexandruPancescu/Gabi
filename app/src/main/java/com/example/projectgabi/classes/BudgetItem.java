@@ -57,6 +57,8 @@ public class BudgetItem {
         this.categoryID = categoryID;
     }
 
+
+
     @Override
     public String toString() {
         return "BudgetItem{" +

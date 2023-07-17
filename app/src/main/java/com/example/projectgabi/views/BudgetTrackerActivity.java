@@ -11,9 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.example.projectgabi.R;
+import com.example.projectgabi.adapters.AccountAdapter;
+import com.example.projectgabi.adapters.BudgetItemAdapter;
 import com.example.projectgabi.adapters.BudgetItemExpandableListAdapter;
 import com.example.projectgabi.charts.BudgetViewCC;
 import com.example.projectgabi.classes.Budget;
@@ -45,6 +48,7 @@ public class BudgetTrackerActivity extends AppCompatActivity {
     Button mainActivityBtn, setUpBudgetBtn;
     Intent intent;
     Spinner budgetDateSpinner;
+    ListView budgetItemListView;
 
     CombinedChart combinedChart;
 
@@ -119,7 +123,7 @@ public class BudgetTrackerActivity extends AppCompatActivity {
     private void setCategoriesValues(ArrayList<Category> categories, Budget budget, ArrayList<BudgetItem> budgetItems) {
 
         TransactionController transactionController = new TransactionController();
-        transactionController.getTransactionsFromDB(context);
+        transactionController.getTransactionsFromDB(context, LoginPage.userID);
         Log.d("BudgetTrackerActivity", "setCategoriesValues: " + categories.toString());
 
         transactionController.setTransactionCallback(new TransactionCallback() {
@@ -141,10 +145,27 @@ public class BudgetTrackerActivity extends AppCompatActivity {
                     }
                 }
                 BudgetTrackerActivity.this.initializeCombineChart(budget, categories);
-                BudgetTrackerActivity.this.initializeListView( context,  categories,budgetItems, transactions,budget ); ;
+                BudgetTrackerActivity.this.initializeListView( context,  categories,budgetItems, transactions,budget );
+                BudgetTrackerActivity.this.initializeLV(context, categories, budgetItems, transactions, budget);
 
             }
         });
+
+    }
+
+    private void initializeLV(Context context, ArrayList<Category> categories, ArrayList<BudgetItem> budgetItems, ArrayList<Transaction> transactions, Budget budget) {
+        BudgetItemAdapter budgetItemAdapter = new BudgetItemAdapter(getApplicationContext(),
+                R.layout.view_butget_item,
+                budgetItems,
+                getLayoutInflater());
+        budgetItemAdapter.setCategoryArrayList(categories);
+        budgetItemAdapter.setBudget(budget);
+        budgetItemAdapter.setBudgetItemArrayList(budgetItems);
+        budgetItemAdapter.setTransactionArrayList(transactions);
+        budgetItemAdapter.setContext(context);
+
+        budgetItemListView.setAdapter(budgetItemAdapter);
+
 
     }
 
@@ -194,6 +215,7 @@ public class BudgetTrackerActivity extends AppCompatActivity {
         categories = new ArrayList<>();
         context = this;
         budgetItemsListView = findViewById(R.id.budgetTrackerListView);
+        budgetItemListView = findViewById(R.id.budgetTrackerLv);
 
     }
 

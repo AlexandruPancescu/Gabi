@@ -30,11 +30,15 @@ public class TransactionController implements TransactionCallback {
 
     TransactionCallback transactionCallback;
 
+   private  Context context;
     ArrayList<PieEntry> categoriesPieEntries;
     ArrayList<Transaction> transactions;
 
     HashMap<String, List<Transaction>> transactionMap;
     HashMap<String, List<Transaction>> transactionMapByParentCategory;
+
+
+
 
     public TransactionController() {
         categoriesPieEntries = new ArrayList<>();
@@ -69,7 +73,6 @@ public class TransactionController implements TransactionCallback {
             // should make it into a method
             for (int i = 0; i < jsonArray.length(); i++) {
 
-
                 JSONObject jsonTransaction = jsonArray.getJSONObject(i);
                 // Log.d("transaction json", "s " + jsonTransaction.toString());
 
@@ -79,11 +82,15 @@ public class TransactionController implements TransactionCallback {
                 Date date = DateConverter.fromString(jsonTransaction.getString(Constants.KEY_TRANSACTION_DATE));
                 String description = jsonTransaction.getString(Constants.KEY_TRANSACTION_DESCRIPTION);
                 String parentCategory = jsonTransaction.getString(Constants.KEY_TRANSACTION_PARENT_CATEGORY);
+                String user_id = jsonTransaction.getString("FK_UserID");
+                String account_id  = jsonTransaction.getString("FK_AccountID");
                 Log.d("transaction", "parentCategory: " + parentCategory);
                 // generate an UUID for transaction
 
                 String id = jsonTransaction.getString(Constants.KEY_TRANSACTION_ID);
                 Transaction transaction = new Transaction(id, type, category, value, date, description, parentCategory);
+                transaction.setFk_account(account_id);
+                transaction.setFk_user(user_id);
 
                 //in the transaction map, add the transaction to the list of transactions, based on the cateogry
 
@@ -109,9 +116,11 @@ public class TransactionController implements TransactionCallback {
         }
     }
 
-    public synchronized void getTransactionsFromDB(Context context) {
-        Log.d("TransactionController", "createComponents: " + Constants.GET_TRANSACTION_URL);
-        JsonObjectRequest request = new JsonObjectRequest(Constants.GET_TRANSACTION_URL, new Response.Listener<JSONObject>() {
+    public synchronized void getTransactionsFromDB(Context context, String userID) {
+
+        String url = Constants.GET_TRANSACTIONS_BY_USER_ID+ "?id=" + userID;
+        Log.d("TransactionController", "createComponents: " + url);
+        JsonObjectRequest request = new JsonObjectRequest(url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -126,6 +135,7 @@ public class TransactionController implements TransactionCallback {
 
                 } catch (Exception e) {
                     Log.d("TransactionController", "error in json catch"  + " " + e.getLocalizedMessage());
+                    Log.d("TransactionController", "error in json catch"  + " " + e.getMessage());
 
                 }
             }
@@ -136,10 +146,11 @@ public class TransactionController implements TransactionCallback {
             public void onErrorResponse(VolleyError error) {
 
                 if (error != null) {
-                    Log.d("TransactionController error", error.toString());
+                    Log.d("TransactionController error1", error.toString());
+                    Log.d("TransactionController error1", error.getMessage());
 
                 } else {
-                    Log.d("TransactionController error", "unknown");
+                    Log.d("TransactionController error1", "unknown");
                 }
             }
         });
@@ -193,4 +204,19 @@ public class TransactionController implements TransactionCallback {
 
     }
 
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(ArrayList<Transaction> transactions) {
+        this.transactions = transactions;
+    }
 }

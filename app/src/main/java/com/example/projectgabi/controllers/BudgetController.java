@@ -52,11 +52,10 @@ public class BudgetController {
                             String startDate = jsonObject.getString("StartDate");
                             String endDate = jsonObject.getString("EndDate");
                             budgetDates.add( startDate + " - " + endDate);
-
-
                         }
                         budgetDatesCallBack.onReceivedBudgetDates(budgetDates);
                     } catch (JSONException e) {
+                        Log.d("BudgetController", "getBudgetDates: " + e.getMessage());
                         e.printStackTrace();
                     }
                 },
@@ -67,8 +66,8 @@ public class BudgetController {
         RequestHandler.getInstance(context).addToRequestQueue(jsonObjectRequest);
 
     }
-    public void createBudget(Context context, Budget budget) {
-
+    public void createBudget(Context context, Budget budget, String userId) {
+Log.d("New Budget ", "createBudget: " + "budget.toString()");
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.CREATE_BUDGET_URL,
                 response -> {
                     Log.d("New Budget response", response.toString());
@@ -83,7 +82,7 @@ public class BudgetController {
                 params.put(Constants.KEY_BUDGET_ID, budget.getBudgetID());
                 params.put(Constants.KEY_BUDGET_START_DATE, DateConverter.fromDate(budget.getStartDate()));
                 params.put(Constants.KEY_BUDGET_END_DATE, DateConverter.fromDate(budget.getEndDate()));
-                params.put(Constants.KEY_BUDGET_USER_ID, budget.getUserId());
+                params.put(Constants.KEY_BUDGET_USER_ID, userId);
                 Log.d("New Budget ", "params" + params.toString());
                 return params;
             }

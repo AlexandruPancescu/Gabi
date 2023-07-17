@@ -1,5 +1,6 @@
 package com.example.projectgabi.views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -19,9 +20,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.projectgabi.R;
 import com.example.projectgabi.classes.Transaction;
 import com.example.projectgabi.classes.User;
+import com.example.projectgabi.controllers.AccountController;
 import com.example.projectgabi.controllers.TransactionController;
+import com.example.projectgabi.controllers.UserController;
 import com.example.projectgabi.interfaces.TransactionCallback;
 import com.example.projectgabi.adapters.TransactionExpandableListAdapter;
+import com.example.projectgabi.interfaces.UserCallback;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
     HashMap<String, List<Transaction>> metaCategoryMap;
     ImageView deleteTransactionIV;
     Spinner monthSpinner;
+    Context context = this;
 
 
     @Override
@@ -62,17 +67,14 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
         initComponents();
 
         intent = getIntent();
-
+        getTransactionsFromDB();
         if (transactionMap == null) {
             Toast.makeText(this, "not empty", Toast.LENGTH_SHORT).show();
             Log.d("transactionMap", "not empty");
             //createList();
         }
 
-        if (intent.hasExtra(LoginPage.USERNAME_KEY)) {
-            //tvWelcome.setText("Welcome, " + intent.getStringExtra(LoginPage.USERNAME_KEY));
-            String welcomeMessaage = String.format(getResources().getString(R.string.welcome_message), intent.getStringExtra(LoginPage.USERNAME_KEY));
-        }
+
 
         addTransactionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +101,12 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
             }
         });
 
-        getTransactionsFromDB();
+
         monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                String month = monthSpinner.getSelectedItem().toString();
+               // this is where the visual elements are created/updated when the user selects a month
                initializeElements();
             }
 
@@ -116,45 +119,55 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
 
     private void initializeElements() {
 
-        TransactionController transactionController = new TransactionController();
-        transactionController.getTransactionsFromDB(this);
-        // String month = monthSpinner.getSelectedItem().toString();
-        transactionController.setTransactionCallback(new TransactionCallback() {
+        UserController userController = new UserController();
+        String email = LoginPage.userEmail;
+        String password = LoginPage.userPassword;
+        userController.getUser(email, password );
+        userController.setUserCallback(new UserCallback() {
             @Override
-            public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory,
-                                              ArrayList<PieEntry> categories) {
-              //   Log.d("Main interface test", categories.toString());
+            public void onReceivedUser(User user) {
+                TransactionController transactionController = new TransactionController();
+                transactionController.getTransactionsFromDB(context, user.getUserID());
 
-                String month = monthSpinner.getSelectedItem().toString();
+                // String month = monthSpinner.getSelectedItem().toString();
+                transactionController.setTransactionCallback(new TransactionCallback() {
+                    @Override
+                    public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory,
+                                                      ArrayList<PieEntry> categories) {
+                        //   Log.d("Main interface test", categories.toString());
 
-                addChartValues(categories, month );
-                initPieChart(categories);
-                createList(transactionMapByParentCategory);
-                transactionMap = transactionHashMap;
-            }
-            @Override
-            public void getTransactions(ArrayList<Transaction> transactions) {
+                        String month = monthSpinner.getSelectedItem().toString();
 
+                        addChartValues(categories, month );
+                        initPieChart(categories);
+                        createList(transactionMapByParentCategory);
+                        transactionMap = transactionHashMap;
+                    }
+                    @Override
+                    public void getTransactions(ArrayList<Transaction> transactions) {
+
+                    }
+                });
+                transactionMap = transactionController.getTransactionMap();
+                metaCategoryMap = transactionController.getTransactionMapByParentCategory();
+                categories = (ArrayList<PieEntry>) transactionController.getCategoriesPieEntries();
+
+
+                //addChartValues(categories, month);
             }
         });
-        transactionMap = transactionController.getTransactionMap();
-        metaCategoryMap = transactionController.getTransactionMapByParentCategory();
-        categories = (ArrayList<PieEntry>) transactionController.getCategoriesPieEntries();
 
-
-        //addChartValues(categories, month);
     }
 
     public void getTransactionsFromDB(){
         TransactionController transactionController = new TransactionController();
-        transactionController.getTransactionsFromDB(this);
+        transactionController.getTransactionsFromDB(context, LoginPage.userID);
         transactionController.setTransactionCallback(new TransactionCallback() {
             @Override
             public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory,
                                               ArrayList<PieEntry> categories) {
                 //   Log.d("Main interface test", categories.toString());
                 // showMaps(categories, transactionMapByParentCategory);
-
                 addSpinnerValues(transactionHashMap);
 
             }
