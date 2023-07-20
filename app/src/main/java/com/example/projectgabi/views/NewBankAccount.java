@@ -15,8 +15,8 @@ import android.widget.Spinner;
 import com.example.projectgabi.R;
 import com.example.projectgabi.classes.Account;
 import com.example.projectgabi.classes.User;
-import com.example.projectgabi.controllers.AccountController;
-import com.example.projectgabi.controllers.UserController;
+import com.example.projectgabi.models.AccountController;
+import com.example.projectgabi.models.UserController;
 import com.example.projectgabi.interfaces.UserCallback;
 
 import java.util.UUID;
@@ -41,13 +41,9 @@ public class NewBankAccount extends AppCompatActivity {
         createBankAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 checkData();
-
                 intent = new Intent(getApplicationContext(), AccountActivity.class);
                 startActivity(intent);
-
-
             }
         });
 
@@ -69,7 +65,7 @@ public class NewBankAccount extends AppCompatActivity {
         UserController userController = new UserController();
         String email = LoginPage.userEmail;
         String password = LoginPage.userPassword;
-       userController.getUser(email, password );
+        userController.getUser(email, password );
        userController.setUserCallback(new UserCallback() {
            @Override
            public void onReceivedUser(User user) {
@@ -78,9 +74,6 @@ public class NewBankAccount extends AppCompatActivity {
                        createAccount(user.getUserID()));
            }
        });
-
-
-
 
     }
 

@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.projectgabi.R;
 import com.example.projectgabi.classes.User;
-import com.example.projectgabi.controllers.UserController;
+import com.example.projectgabi.models.UserController;
 import com.example.projectgabi.interfaces.UserCallback;
 
 public class LoginPage extends AppCompatActivity {

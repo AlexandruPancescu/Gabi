@@ -14,6 +14,8 @@
     <color name="progress_bar_red">#ff0000</color>
     <color name="progress_bar_green">#00FF00</color>
     <color name="progress_bar_orange">#FFA500</color>
+    <color name="light_blue">#87CEFA</color>
+
     <color name="p_bar_pale_green">#B9FBB9</color>
 
 

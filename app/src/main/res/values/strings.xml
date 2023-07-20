@@ -19,6 +19,12 @@
     <string name="additional_acccount_information">Additional acccount information</string>
     <string name="this_is_a_very_important_piece_on_info">this is a very important piece on info</string>
     <string name="import_data_from_excel">Import data from excel</string>
+    <string name="transactions">Transactions</string>
+    <string name="add_a_new_transaction">Add a new Transaction</string>
+    <string name="pick_a_date">Pick a date</string>
+    <string name="bank_name">Bank Name</string>
+    <string name="balance">Balance</string>
+    <string name="currency">Currency</string>
 
 
     <string-array name="meta_categories">

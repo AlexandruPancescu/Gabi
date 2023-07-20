@@ -17,9 +17,9 @@ import com.example.projectgabi.classes.Budget;
 import com.example.projectgabi.classes.BudgetItem;
 import com.example.projectgabi.classes.Category;
 import com.example.projectgabi.classes.User;
-import com.example.projectgabi.controllers.BudgetController;
-import com.example.projectgabi.controllers.CategoryController;
-import com.example.projectgabi.controllers.UserController;
+import com.example.projectgabi.models.BudgetController;
+import com.example.projectgabi.models.CategoryController;
+import com.example.projectgabi.models.UserController;
 import com.example.projectgabi.interfaces.UserCallback;
 import com.example.projectgabi.utils.DateConverter;
 
@@ -229,14 +229,14 @@ public class SetUpBudgetActivity extends AppCompatActivity {
     private void initializeCategoryList() {
         categories.add(new Category("Mortgage/Rent", "Frequent"));
         categories.add(new Category("Electricity", "Frequent"));
-        categories.add(new Category("Phone Bills", "Frequent"));
+        categories.add(new Category("Phone bills", "Frequent"));
         categories.add(new Category("Cable-Internet Subscription", "Frequent"));
         categories.add(new Category("Water", "Frequent"));
 
         categories.add(new Category("Food", "Non-Frequent"));
         categories.add(new Category("Pets", "Non-Frequent"));
         categories.add(new Category("Car", "Non-Frequent"));
-        categories.add(new Category("Clothing", "Non-Frequent"));
+        categories.add(new Category("Clothes", "Non-Frequent"));
         categories.add(new Category("Health", "Non-Frequent"));
         categories.add(new Category("Going Out", "Non-Frequent"));
         categories.add(new Category("Entertainment", "Non-Frequent"));

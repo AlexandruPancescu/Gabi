@@ -8,14 +8,13 @@ import com.example.projectgabi.classes.Budget;
 import com.example.projectgabi.classes.BudgetItem;
 import com.example.projectgabi.classes.Category;
 import com.example.projectgabi.classes.Transaction;
-import com.example.projectgabi.controllers.BudgetController;
-import com.example.projectgabi.controllers.TransactionController;
+import com.example.projectgabi.models.BudgetController;
+import com.example.projectgabi.models.TransactionController;
 import com.example.projectgabi.interfaces.BudgetCallBack;
 import com.example.projectgabi.interfaces.TransactionCallback;
 import com.example.projectgabi.utils.DateConverter;
 import com.example.projectgabi.views.LoginPage;
 import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -136,9 +135,6 @@ public class BudgetViewCC {
         budgetController.setBudgetCallBack(new BudgetCallBack() {
             @Override
             public void onReceivedBudget(Budget previousBudget, ArrayList<BudgetItem> budgetItems, ArrayList<Category> categories) {
-
-
-
                    Log.d("BudgetCC ", "budget: " +  previousBudget.toString());
 
                    TransactionController transactionController = new TransactionController();

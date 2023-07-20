@@ -71,11 +71,10 @@ public class BudgetItemAdapter extends ArrayAdapter<BudgetItem> {
                 progressBar.setProgressTintList(context.getResources().getColorStateList(R.color.switch_light_grey));
             }else{
 
-                Drawable progressDrawable =  progressBar.getProgressDrawable();
-//                progressDrawable.setColorFilter(context.getResources().getColor(R.color.progress_bar_green),
-//                        PorterDuff.Mode.MULTIPLY);
+                progressBar.setMax((int) budgetItemAmount);
+                progressBar.setProgress((int) spentAmount, true);
+               // progressBar.setProgressTintList(context.getResources().getColorStateList(R.color.progress_bar_green));
 
-                progressBar.setProgressDrawable(progressDrawable);
 
             }
         } else if (spentAmount == budgetItemAmount) {

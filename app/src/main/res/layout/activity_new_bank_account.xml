@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="24dp"
-            android:text="Bank Name"
+            android:text="@string/bank_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="Balance"
+            android:text="@string/balance"
             app:layout_constraintStart_toStartOf="@id/textViewBankName"
             app:layout_constraintTop_toBottomOf="@id/editTextBankName" />
 
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Currency"
+            android:text="@string/currency"
             app:layout_constraintStart_toStartOf="@id/textViewBalance"
             app:layout_constraintTop_toBottomOf="@id/editTextBalance" />
 

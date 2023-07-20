@@ -1,51 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".views.MenuActivity">
 
-    <Button
-        android:id="@+id/transactionBtn"
-        android:layout_width="194dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="120dp"
-        android:text="Transactions"
+    <TextView
+        android:id="@+id/loginAppNameTv"
+        android:layout_width="329dp"
+        android:layout_height="136dp"
+        android:layout_marginTop="36dp"
+        android:bufferType="editable"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="gabi"
+        android:textAllCaps="false"
+        android:textColor="@color/text_font_color"
+        android:textSize="100sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/budgetBtn"
-        android:layout_width="194dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="32dp"
-        android:text="Budget"
+        android:id="@+id/transactionBtn"
+        android:layout_width="314dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/button_background"
+        android:gravity="center"
+        android:text="@string/transactions"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transactionBtn" />
-
-    <Button
-        android:id="@+id/bankAccountBtn"
-        android:layout_width="194dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="28dp"
-        android:text="Bank Account"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/budgetBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/loginAppNameTv" />
 
     <Button
         android:id="@+id/logoutBtn"
-        android:layout_width="194dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="315dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_background"
+        android:gravity="center"
         android:text="Log Out"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bankAccountBtn" />
+
+    <Button
+        android:id="@+id/bankAccountBtn"
+        android:layout_width="312dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:gravity="center"
+        android:text="Bank Account"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/budgetBtn" />
+
+    <Button
+        android:id="@+id/budgetBtn"
+        android:layout_width="311dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_background"
+        android:gravity="center"
+        android:text="Budget"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transactionBtn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

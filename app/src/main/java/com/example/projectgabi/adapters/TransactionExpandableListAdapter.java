@@ -10,7 +10,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.projectgabi.controllers.TransactionController;
+import com.example.projectgabi.models.TransactionController;
 import com.example.projectgabi.R;
 import com.example.projectgabi.classes.Transaction;
 
@@ -121,7 +121,10 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
 
 
         TextView childNameTv = convertView.findViewById(R.id.transactionElementNameTv);
+        TextView descriptionTv = convertView.findViewById(R.id.transactionElementDescriptionTv);
         String childValue = String.format("%s   %.2f", transaction.getCategory(), transaction.getValue());
+        String descriptionValue = String.format("%s", transaction.getDescription().trim());
+        descriptionTv.setText(descriptionValue);
         childNameTv.setText(childValue);
         ImageView delete = convertView.findViewById(R.id.transactionDeleteIV);
         delete.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +137,7 @@ public class TransactionExpandableListAdapter extends BaseExpandableListAdapter 
                         transactionHashMap.get(transaction.getParentCategory()).remove(transaction);
                         TransactionController transactionController = new TransactionController();
                         transactionController.deleteTransaction(transaction.getId());
+
                         break;
                     }
                 }

@@ -14,16 +14,23 @@
 
     <TextView
         android:id="@+id/transactionElementNameTv"
-        android:layout_width="340dp"
+        android:layout_width="79dp"
         android:layout_height="33dp"
         android:layout_weight="1"
         android:text="" />
 
     <!--        set the height and width same as transactionElementNameTv-->
+    <TextView
+        android:id="@+id/transactionElementDescriptionTv"
+        android:layout_width="wrap_content"
+        android:layout_height="63dp"
+        android:layout_weight="1"
+        android:text="@string/description" />
+
     <ImageView
         android:id="@+id/transactionDeleteIV"
-        android:layout_width="92dp"
-        android:layout_height="23dp"
+        android:layout_width="25dp"
+        android:layout_height="34dp"
         android:layout_weight="1"
 
         android:clickable="true"

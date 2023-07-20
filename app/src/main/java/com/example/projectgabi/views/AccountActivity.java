@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.example.projectgabi.R;
 import com.example.projectgabi.adapters.AccountAdapter;
 import com.example.projectgabi.classes.Account;
-import com.example.projectgabi.controllers.AccountController;
+import com.example.projectgabi.models.AccountController;
 import com.example.projectgabi.interfaces.AccountCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

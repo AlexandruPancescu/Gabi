@@ -18,6 +18,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="Go to account page"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/mainAddTransactionButton"
             app:layout_constraintHorizontal_bias="0.5"
@@ -36,15 +37,15 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/mainAccountButton"
             app:layout_constraintTop_toBottomOf="@+id/mainTransactionFrameLayout"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/mainPieChart"
-            android:layout_width="384dp"
-            android:layout_height="236dp"
-            android:layout_marginTop="50dp"
+            android:layout_width="394dp"
+            android:layout_height="269dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.481"
+            app:layout_constraintHorizontal_bias="0.588"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainMonthSpinner">
 
@@ -57,7 +58,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:text="Budget"
-            android:visibility="visible"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/mainPieChart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -65,8 +66,8 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
         <FrameLayout
             android:id="@+id/mainTransactionFrameLayout"
-            android:layout_width="384dp"
-            android:layout_height="236dp"
+            android:layout_width="387dp"
+            android:layout_height="251dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/frame_layout"
             app:barrierMargin="@dimen/material_emphasis_disabled"
@@ -76,12 +77,13 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             app:layout_constraintTop_toBottomOf="@+id/mainPieChart"
 
             >
-<ExpandableListView
-    android:id="@+id/mainTransactionELV"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-</ExpandableListView>
+            <ExpandableListView
+                android:id="@+id/mainTransactionELV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </ExpandableListView>
 
 
         </FrameLayout>
@@ -90,7 +92,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             android:id="@+id/mainMonthSpinner"
             android:layout_width="114dp"
             android:layout_height="42dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="28dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.053"
             app:layout_constraintStart_toStartOf="parent"

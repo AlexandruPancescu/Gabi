@@ -1,4 +1,4 @@
-package com.example.projectgabi.controllers;
+package com.example.projectgabi.models;
 
 import android.content.Context;
 import android.util.Log;

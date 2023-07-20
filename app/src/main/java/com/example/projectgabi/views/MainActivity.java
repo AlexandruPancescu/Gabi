@@ -20,9 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.projectgabi.R;
 import com.example.projectgabi.classes.Transaction;
 import com.example.projectgabi.classes.User;
-import com.example.projectgabi.controllers.AccountController;
-import com.example.projectgabi.controllers.TransactionController;
-import com.example.projectgabi.controllers.UserController;
+import com.example.projectgabi.models.TransactionController;
+import com.example.projectgabi.models.UserController;
 import com.example.projectgabi.interfaces.TransactionCallback;
 import com.example.projectgabi.adapters.TransactionExpandableListAdapter;
 import com.example.projectgabi.interfaces.UserCallback;
@@ -135,9 +134,7 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
                     public void onReceivedTransaction(HashMap<String, List<Transaction>> transactionHashMap, HashMap<String, List<Transaction>> transactionMapByParentCategory,
                                                       ArrayList<PieEntry> categories) {
                         //   Log.d("Main interface test", categories.toString());
-
                         String month = monthSpinner.getSelectedItem().toString();
-
                         addChartValues(categories, month );
                         initPieChart(categories);
                         createList(transactionMapByParentCategory);
@@ -151,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
                 transactionMap = transactionController.getTransactionMap();
                 metaCategoryMap = transactionController.getTransactionMapByParentCategory();
                 categories = (ArrayList<PieEntry>) transactionController.getCategoriesPieEntries();
-
-
                 //addChartValues(categories, month);
             }
         });
@@ -169,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements TransactionCallba
                 //   Log.d("Main interface test", categories.toString());
                 // showMaps(categories, transactionMapByParentCategory);
                 addSpinnerValues(transactionHashMap);
-
             }
             @Override
             public void getTransactions(ArrayList<Transaction> transactions) {

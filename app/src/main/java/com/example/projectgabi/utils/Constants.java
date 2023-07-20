@@ -9,11 +9,11 @@ public class Constants {
     // ploscu
     // private static final String ROOT_URL = "http://192.168.1.100/android/v1/";
     // camin
-       private static final String ROOT_URL = "http://192.168.1.101/android/v1/";
-    //  biblioteca
+      // private static final String ROOT_URL = "http://192.168.1.101/android/v1/";
+    //  biblioteca2
     // private  static final String ROOT_URL = "http://10.30.24.134/android/v1/";
     //hotspot
-      //private  static final String ROOT_URL = "http://192.168.249.217/android/v1/";
+      private  static final String ROOT_URL = "http://192.168.68.217/android/v1/";
     public static final String GET_BANK_ACCOUNTS_URL = ROOT_URL + "getBankAccounts.php";
     public static final String GET_BANK_ACCOUNT_URL = ROOT_URL + "getAccount.php";
     public static final String CREATE_TRANSACTION_URL = ROOT_URL + "createTransaction.php";

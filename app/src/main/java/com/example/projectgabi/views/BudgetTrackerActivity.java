@@ -10,22 +10,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.example.projectgabi.R;
-import com.example.projectgabi.adapters.AccountAdapter;
 import com.example.projectgabi.adapters.BudgetItemAdapter;
-import com.example.projectgabi.adapters.BudgetItemExpandableListAdapter;
 import com.example.projectgabi.charts.BudgetViewCC;
 import com.example.projectgabi.classes.Budget;
 import com.example.projectgabi.classes.BudgetItem;
 import com.example.projectgabi.classes.Category;
 import com.example.projectgabi.classes.Transaction;
-import com.example.projectgabi.controllers.BudgetController;
-import com.example.projectgabi.controllers.CategoryController;
-import com.example.projectgabi.controllers.TransactionController;
+import com.example.projectgabi.models.BudgetController;
+import com.example.projectgabi.models.CategoryController;
+import com.example.projectgabi.models.TransactionController;
 import com.example.projectgabi.interfaces.BudgetCallBack;
 import com.example.projectgabi.interfaces.BudgetDatesCallBack;
 import com.example.projectgabi.interfaces.TransactionCallback;
@@ -45,14 +42,14 @@ public class BudgetTrackerActivity extends AppCompatActivity {
     BudgetController budgetController;
     CategoryController categoryController;
     TransactionController transactionController;
-    Button mainActivityBtn, setUpBudgetBtn;
+    Button backBtn, setUpBudgetBtn;
     Intent intent;
     Spinner budgetDateSpinner;
     ListView budgetItemListView;
 
     CombinedChart combinedChart;
 
-    ExpandableListView budgetItemsListView;
+
 
     @Override
     protected synchronized void onCreate(Bundle savedInstanceState) {
@@ -72,10 +69,10 @@ public class BudgetTrackerActivity extends AppCompatActivity {
             }
         });
 
-        mainActivityBtn.setOnClickListener(new View.OnClickListener() {
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent = new Intent(getApplicationContext(), MenuActivity.class);
                 startActivity(intent);
             }
         });
@@ -145,7 +142,7 @@ public class BudgetTrackerActivity extends AppCompatActivity {
                     }
                 }
                 BudgetTrackerActivity.this.initializeCombineChart(budget, categories);
-                BudgetTrackerActivity.this.initializeListView( context,  categories,budgetItems, transactions,budget );
+               // BudgetTrackerActivity.this.initializeListView( context,  categories,budgetItems, transactions,budget );
                 BudgetTrackerActivity.this.initializeLV(context, categories, budgetItems, transactions, budget);
 
             }
@@ -166,55 +163,18 @@ public class BudgetTrackerActivity extends AppCompatActivity {
 
         budgetItemListView.setAdapter(budgetItemAdapter);
 
-
     }
-
-    private void initializeListView(Context context, ArrayList<Category> categories,
-                                    ArrayList<BudgetItem> budgetItems, ArrayList<Transaction> transactions ,Budget budget) {
-
-
-        BudgetItemExpandableListAdapter budgetAdapter  = new BudgetItemExpandableListAdapter(context,
-                categories,budgetItems, transactions, budget );
-
-        budgetItemsListView.setAdapter(budgetAdapter);
-        budgetItemsListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            int previousGroup = -1;
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                if (groupPosition != previousGroup && previousGroup != -1) {
-                    budgetItemsListView.collapseGroup(previousGroup);
-                }
-                previousGroup = groupPosition;
-                Log.d("createList", "groupPosition: " + groupPosition);
-            }
-        });
-
-        HashMap<String, ArrayList<BudgetItem>> finalMap = budgetAdapter.getBudgetItemHashMap();
-        budgetItemsListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Log.d("budget tracker", "onChildClick: ");
-                String selected = finalMap.get(finalMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
-                Log.d("Budget tracker", "onChildClick: " + selected);
-                return true;
-            }
-        });
-        }
-
-
-
 
     private synchronized void initializeElements() {
 
         combinedChart = findViewById(R.id.budgetCombinedChart);
         budgetDateSpinner = findViewById(R.id.budgetDateSelector);
-        mainActivityBtn = findViewById(R.id.budgetReturnToExpenses);
+        backBtn = findViewById(R.id.budgetReturnToExpenses);
         budgetItems = new ArrayList<>();
         setUpBudgetBtn = findViewById(R.id.budgetSetUpANewBudget);
         categories = new ArrayList<>();
         context = this;
-        budgetItemsListView = findViewById(R.id.budgetTrackerListView);
+      //  budgetItemsListView = findViewById(R.id.budgetTrackerListView);
         budgetItemListView = findViewById(R.id.budgetTrackerLv);
 
     }
@@ -234,9 +194,7 @@ public class BudgetTrackerActivity extends AppCompatActivity {
                 budgetDateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                         retrieveElementsData(getDateFromSpinner());
-
                     }
 
                     @Override
@@ -252,3 +210,36 @@ public class BudgetTrackerActivity extends AppCompatActivity {
     }
 
 }
+
+//    private void initializeListView(Context context, ArrayList<Category> categories,
+//                                    ArrayList<BudgetItem> budgetItems, ArrayList<Transaction> transactions ,Budget budget) {
+//
+//
+//        BudgetItemExpandableListAdapter budgetAdapter  = new BudgetItemExpandableListAdapter(context,
+//                categories,budgetItems, transactions, budget );
+//
+//        budgetItemsListView.setAdapter(budgetAdapter);
+//        budgetItemsListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+//            int previousGroup = -1;
+//            @Override
+//            public void onGroupExpand(int groupPosition) {
+//                if (groupPosition != previousGroup && previousGroup != -1) {
+//                    budgetItemsListView.collapseGroup(previousGroup);
+//                }
+//                previousGroup = groupPosition;
+//                Log.d("createList", "groupPosition: " + groupPosition);
+//            }
+//        });
+//
+//        HashMap<String, ArrayList<BudgetItem>> finalMap = budgetAdapter.getBudgetItemHashMap();
+//        budgetItemsListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//
+//            @Override
+//            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+//                Log.d("budget tracker", "onChildClick: ");
+//                String selected = finalMap.get(finalMap.keySet().toArray()[groupPosition]).get(childPosition).toString();
+//                Log.d("Budget tracker", "onChildClick: " + selected);
+//                return true;
+//            }
+//        });
+//        }
